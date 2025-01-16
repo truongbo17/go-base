@@ -1,8 +1,10 @@
-<img src="https://github.com/truongbo17/go-base/blob/main/readme-logo.png?raw=true" alt="Example Image" style="float: right; width: 150px; margin-left: 10px;">
-
 # Go Gin Base
 
+<div>
+<img src="https://github.com/truongbo17/go-base/blob/main/readme-logo.png?raw=true" align="right">
+
 A development boilerplate based on the Gin framework, quickly build and develop web applications.
+</div>
 
 ----
 
@@ -16,13 +18,15 @@ So why I use choose Gin framework?
 - Big community, really the biggest. With twice the stars and contributors of the second place competitor.
 - Suitable for building RESTFul API, microservices or realtime applications.
 
+## Installation
+
 ## Feature
 
 * I18N
 * Config
 * Command / Console
 * Schedule
-* Queue 
+* Queue
 * Swagger
 * View
 * Logger
