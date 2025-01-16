@@ -22,9 +22,9 @@ So why I use choose Gin framework?
 * Config
 * Command / Console
 * Schedule
-* Queue (BullMQ)
+* Queue 
 * Swagger
-* View (hbs engine)
+* View
 * Logger
 * Database (DocumentDB(MongoDB), Relation DB(MYSQL))
 * Mail
@@ -35,7 +35,7 @@ So why I use choose Gin framework?
 * Cache (local, redis)
 * Redis
 * GraphQL
-* Http call service (Axios)
+* Http call service
 * Middleware
 * Filter
 * Push notify to telegram
