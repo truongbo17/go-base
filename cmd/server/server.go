@@ -6,7 +6,7 @@ import (
 	"github.com/spf13/cobra"
 	"go-base/config"
 	"go-base/internal/infra/logger"
-	"go-base/routers"
+	"go-base/internal/routes"
 	"net/http"
 	"os"
 	"os/signal"
@@ -25,8 +25,8 @@ var (
 )
 
 func start() {
-	routers.Init()
-	r := routers.Router
+	routes.Init()
+	r := routes.Router
 
 	logger.Init()
 	log := logger.LogrusLogger
