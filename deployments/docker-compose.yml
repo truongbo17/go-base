@@ -1,0 +1,10 @@
+version: "3"
+services:
+  go-gin-boilerplate:
+    image: golang:latest
+    container_name: go-gin
+    working_dir: /server
+    volumes:
+      - ./:/server
+    restart: always
+    command: sh -c "make build && ./build/go-base server"

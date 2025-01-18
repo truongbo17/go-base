@@ -8,6 +8,13 @@ A development boilerplate based on the Gin framework, quickly build and develop 
 
 ----
 
+## Document
+
+- Golang: https://go.dev
+- Gin framework: https://gin-gonic.com
+
+----
+
 ## Introduction
 
 So why I use choose Gin framework?
@@ -17,8 +24,13 @@ So why I use choose Gin framework?
   use fiber, even though fiber has better stats).
 - Big community, really the biggest. With twice the stars and contributors of the second place competitor.
 - Suitable for building RESTFul API, microservices or realtime applications.
+- There is a full tutorial to build up a web server, even in Go Dev official blog!
+
+----
 
 ## Installation
+
+----
 
 ## Feature
 
@@ -46,4 +58,10 @@ So why I use choose Gin framework?
 * Router
 * Worker
 
+----
+
 ## Overview
+
+----
+
+## Struct
