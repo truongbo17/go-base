@@ -11,4 +11,7 @@ func Init() {
 	Router = gin.Default()
 
 	Router.Use(middlewares.ErrorHandle())
+	Router.Use(middlewares.Cors())
+
+	LoadPublicRouter(Router)
 }
