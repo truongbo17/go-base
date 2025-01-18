@@ -2,28 +2,37 @@ package middlewares
 
 import (
 	"github.com/gin-gonic/gin"
-	"log"
+	"go-base/internal/response"
 	"net/http"
-	"runtime/debug"
 )
 
 func ErrorHandle() gin.HandlerFunc {
 	return func(context *gin.Context) {
+		requestId := context.GetString("x-request-id")
+
 		defer func() {
-			if err := recover(); err != nil {
-				log.Println(err)
-
-				debug.PrintStack()
-
-				context.JSON(http.StatusInternalServerError, gin.H{
-					"code":    http.StatusInternalServerError,
-					"message": "Error",
+			if rec := recover(); rec != nil {
+				context.JSON(http.StatusInternalServerError, response.BaseResponse{
+					Status:     false,
+					StatusCode: http.StatusInternalServerError,
+					RequestId:  requestId,
+					Data:       nil,
+					Message:    "Internal Server Error",
+					Error:      rec,
 				})
-
-				context.Abort()
 			}
 		}()
-
 		context.Next()
+
+		if len(context.Errors) > 0 {
+			context.JSON(http.StatusBadRequest, response.BaseResponse{
+				Status:     false,
+				StatusCode: http.StatusBadRequest,
+				RequestId:  requestId,
+				Data:       nil,
+				Message:    "Bad Request",
+				Error:      context.Errors.String(),
+			})
+		}
 	}
 }

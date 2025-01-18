@@ -12,9 +12,9 @@ func Init() {
 	Router = gin.Default()
 
 	Router.Use(middlewares.RequestID())
+	Router.Use(middlewares.RequestLogger())
 	Router.Use(middlewares.ErrorHandle())
 	Router.Use(middlewares.Cors())
-	Router.Use(middlewares.RequestLogger())
 
 	LoadPublicRouter(Router)
 

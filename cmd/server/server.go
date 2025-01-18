@@ -25,14 +25,14 @@ var (
 )
 
 func start() {
+	config.Init()
+	EnvConfig := config.EnvConfig
+
 	routes.Init()
 	r := routes.Router
 
 	logger.Init()
 	log := logger.LogrusLogger
-
-	config.Init()
-	EnvConfig := config.EnvConfig
 
 	server := &http.Server{
 		Addr:    ":" + EnvConfig.AppConfig.Port,
