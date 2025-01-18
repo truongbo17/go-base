@@ -2,6 +2,7 @@ package routes
 
 import (
 	"github.com/gin-gonic/gin"
+	"go-base/internal/app/auth/routers"
 	"go-base/internal/middlewares"
 )
 
@@ -16,4 +17,6 @@ func Init() {
 	Router.Use(middlewares.RequestLogger())
 
 	LoadPublicRouter(Router)
+
+	routers.LoadAuthModuleRouter(Router)
 }
