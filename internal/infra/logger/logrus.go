@@ -14,7 +14,9 @@ func InitLogrusLogger() *logrus.Logger {
 	currentDate := time.Now()
 
 	logger.SetLevel(logrus.TraceLevel)
-	logger.SetFormatter(&logrus.JSONFormatter{})
+	logger.SetFormatter(&logrus.JSONFormatter{
+		TimestampFormat: "2006-01-02 15:04:05",
+	})
 
 	logFile := &lumberjack.Logger{
 		Filename: fmt.Sprintf("logs/%s.log", currentDate.Format("2006-01-02")),

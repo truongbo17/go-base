@@ -18,8 +18,11 @@ func setupConfig() *Config {
 		panic(err)
 	}
 
-	viper.SetConfigFile(".env")
 	viper.AddConfigPath(path + "/config")
+	viper.SetConfigFile(".env")
+	viper.SetConfigType("env")
+
+	viper.AutomaticEnv()
 
 	if err := viper.ReadInConfig(); err != nil {
 		panic(fmt.Errorf("fatal error config file: %w", err))
@@ -29,6 +32,8 @@ func setupConfig() *Config {
 	if err := viper.Unmarshal(config); err != nil {
 		panic(err)
 	}
+
+	fmt.Println(config.AppConfig.Port)
 
 	return config
 }
