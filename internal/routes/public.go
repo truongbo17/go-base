@@ -1,6 +1,8 @@
 package routes
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/gin-gonic/gin"
+)
 
 func LoadPublicRouter(r *gin.Engine) *gin.RouterGroup {
 	public := r.Group("/")
