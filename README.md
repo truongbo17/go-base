@@ -30,6 +30,31 @@ So why I use choose Gin framework?
 
 ## Installation
 
+### Setup
+
+```shell
+  git clone https://github.com/truongbo17/go-base.git
+  go mod download
+```
+
+```shell
+  cp .env.example .env
+```
+
+### Run the Application
+
+Run with air(hot reload):
+
+```shell
+  air server
+```
+
+Or simple:
+
+```shell
+  go run main.go server
+```
+
 ----
 
 ## Feature
