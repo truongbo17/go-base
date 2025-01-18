@@ -3,22 +3,16 @@ package config
 import (
 	"fmt"
 	"github.com/spf13/viper"
-	"os"
 )
 
 type Config struct {
-	AppConfig AppConfig
+	AppConfig `mapstructure:",squash"`
+	GinMode   string `mapstructure:"GIN_MODE"`
 }
 
 var EnvConfig *Config
 
 func setupConfig() *Config {
-	path, err := os.Getwd()
-	if err != nil {
-		panic(err)
-	}
-
-	viper.AddConfigPath(path + "/config")
 	viper.SetConfigFile(".env")
 	viper.SetConfigType("env")
 
@@ -32,8 +26,6 @@ func setupConfig() *Config {
 	if err := viper.Unmarshal(config); err != nil {
 		panic(err)
 	}
-
-	fmt.Println(config.AppConfig.Port)
 
 	return config
 }

@@ -34,8 +34,8 @@ func start() {
 	config.Init()
 	EnvConfig := config.EnvConfig
 
-	server := http.Server{
-		Addr:    EnvConfig.AppConfig.Port,
+	server := &http.Server{
+		Addr:    ":" + EnvConfig.AppConfig.Port,
 		Handler: r,
 	}
 
@@ -43,7 +43,7 @@ func start() {
 
 	go func() {
 		if err := server.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
-			log.Fatalf("Server listen error: %s\n", err)
+			log.Fatalf("Server listen error: %s", err)
 		}
 	}()
 
@@ -55,7 +55,7 @@ func start() {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 	if err := server.Shutdown(ctx); err != nil {
-		log.Fatalf("Server shutdown error: %s\n", err)
+		log.Fatalf("Server shutdown error: %s", err)
 	}
 	log.Println("Server exiting.")
 }
