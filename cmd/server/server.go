@@ -7,6 +7,7 @@ import (
 	"github.com/spf13/cobra"
 	"go-base/config"
 	_ "go-base/docs"
+	"go-base/internal/infra/database"
 	"go-base/internal/infra/logger"
 	"go-base/internal/routes"
 	"net/http"
@@ -26,38 +27,13 @@ var (
 	}
 )
 
-const (
-	// DebugMode app env debug stg.
-	DebugMode = "debug"
-	// ReleaseMode app env debug production.
-	ReleaseMode = "release"
-)
-
-const (
-	debugCode = iota
-	releaseCode
-)
-
-var (
-	ginMode = debugCode
-)
-
 func start() {
 	config.Init()
 	EnvConfig := config.EnvConfig
 
 	appEnv := EnvConfig.AppConfig.Env
 
-	switch appEnv {
-	case DebugMode:
-		ginMode = debugCode
-	case ReleaseMode:
-		ginMode = releaseCode
-	default:
-		panic("APP_ENV unknown: " + appEnv + " (available mode: debug release)")
-	}
-
-	if appEnv == ReleaseMode {
+	if appEnv == config.ReleaseMode {
 		gin.SetMode(gin.ReleaseMode)
 	} else {
 		gin.SetMode(gin.DebugMode)
@@ -69,9 +45,14 @@ func start() {
 	logger.Init()
 	log := logger.LogrusLogger
 
+	database.ConnectDatabase(&EnvConfig.DatabaseConnection)
+
 	server := &http.Server{
-		Addr:    ":" + EnvConfig.AppConfig.Port,
-		Handler: r,
+		Addr:         ":" + EnvConfig.AppConfig.Port,
+		WriteTimeout: time.Second * 30,
+		ReadTimeout:  time.Second * 30,
+		IdleTimeout:  time.Second * 30,
+		Handler:      r,
 	}
 
 	log.Printf("Server is now listening at port: %s. Good luck!", EnvConfig.AppConfig.Port)
