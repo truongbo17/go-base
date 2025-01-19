@@ -9,12 +9,40 @@ const docTemplate = `{
     "info": {
         "description": "{{escape .Description}}",
         "title": "{{.Title}}",
-        "contact": {},
+        "contact": {
+            "name": "Nguyen Quang Truong",
+            "url": "https://github.com/truongbo17",
+            "email": "truongnq017@gmail.com"
+        },
         "version": "{{.Version}}"
     },
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
-    "paths": {},
+    "paths": {
+        "/ping": {
+            "get": {
+                "description": "Responds with \"pong\" and the request ID.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "text/plain"
+                ],
+                "tags": [
+                    "Public"
+                ],
+                "summary": "Ping endpoint",
+                "responses": {
+                    "200": {
+                        "description": "pong: \u003cx-request-id\u003e",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        }
+    },
     "securityDefinitions": {
         "BearerAuth": {
             "description": "Type \"Bearer\" followed by a space and JWT token.",
@@ -32,13 +60,13 @@ var SwaggerInfo = &swag.Spec{
 	BasePath:         "",
 	Schemes:          []string{},
 	Title:            "Go Gin Base",
-	Description:      "Go-Gin-Base quickly build and develop web applications. restful API, microservice...",
+	Description:      "Go-Gin-Base quickly build and develop web applications. restful API, microservice.",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 	LeftDelim:        "{{",
 	RightDelim:       "}}",
 }
 
-func Init() {
+func init() {
 	swag.Register(SwaggerInfo.InstanceName(), SwaggerInfo)
 }

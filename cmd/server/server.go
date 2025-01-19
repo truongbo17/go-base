@@ -2,10 +2,11 @@ package server
 
 import (
 	"context"
+	"github.com/gin-gonic/gin"
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 	"go-base/config"
-	"go-base/docs"
+	_ "go-base/docs"
 	"go-base/internal/infra/logger"
 	"go-base/internal/routes"
 	"net/http"
@@ -29,10 +30,14 @@ func start() {
 	config.Init()
 	EnvConfig := config.EnvConfig
 
+	if EnvConfig.AppConfig.Env == gin.ReleaseMode {
+		gin.SetMode(gin.ReleaseMode)
+	} else {
+		gin.SetMode(gin.DebugMode)
+	}
+
 	routes.Init()
 	r := routes.Router
-
-	docs.Init()
 
 	logger.Init()
 	log := logger.LogrusLogger

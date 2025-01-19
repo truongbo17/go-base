@@ -8,7 +8,6 @@ import (
 type Config struct {
 	AppConfig  `mapstructure:",squash"`
 	CorsConfig `mapstructure:",squash"`
-	GinMode    string `mapstructure:"GIN_MODE"`
 }
 
 var EnvConfig *Config

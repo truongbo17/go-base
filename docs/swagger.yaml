@@ -1,10 +1,28 @@
 info:
-  contact: {}
+  contact:
+    email: truongnq017@gmail.com
+    name: Nguyen Quang Truong
+    url: https://github.com/truongbo17
   description: Go-Gin-Base quickly build and develop web applications. restful API,
-    microservice...
+    microservice.
   title: Go Gin Base
   version: v0.0.1
-paths: {}
+paths:
+  /ping:
+    get:
+      consumes:
+      - application/json
+      description: Responds with "pong" and the request ID.
+      produces:
+      - text/plain
+      responses:
+        "200":
+          description: 'pong: <x-request-id>'
+          schema:
+            type: string
+      summary: Ping endpoint
+      tags:
+      - Public
 securityDefinitions:
   BearerAuth:
     description: Type "Bearer" followed by a space and JWT token.
