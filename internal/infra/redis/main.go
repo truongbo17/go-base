@@ -7,12 +7,14 @@ import (
 	"go-base/internal/infra/logger"
 )
 
-var RedisClient *redis.Client
+var ClientRedis *redis.Client
 
 func ConnectRedis() *redis.Client {
 	logApp := logger.LogrusLogger
 	EnvConfig := config.EnvConfig
 	configRedis := EnvConfig.CacheConfig
+
+	fmt.Println(1332313123, configRedis)
 
 	redisClient := redis.NewClient(&redis.Options{
 		Addr:     fmt.Sprintf("%s:%s", configRedis.RedisHost, configRedis.RedisPort),
@@ -20,7 +22,7 @@ func ConnectRedis() *redis.Client {
 		Password: configRedis.RedisPassword,
 	})
 
-	RedisClient = redisClient
+	ClientRedis = redisClient
 
 	logApp.Infoln("Success connect to Redis.")
 

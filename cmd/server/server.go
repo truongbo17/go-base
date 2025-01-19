@@ -7,8 +7,10 @@ import (
 	"github.com/spf13/cobra"
 	"go-base/config"
 	_ "go-base/docs"
+	"go-base/internal/infra/cache"
 	"go-base/internal/infra/database"
 	"go-base/internal/infra/logger"
+	"go-base/internal/infra/redis"
 	"go-base/internal/routes"
 	"net/http"
 	"os"
@@ -39,13 +41,18 @@ func start() {
 		gin.SetMode(gin.DebugMode)
 	}
 
-	routes.Init()
-	r := routes.Router
+	redis.ConnectRedis()
+
+	storeCache := EnvConfig.CacheConfig.CacheStore
+	cache.InitCache(storeCache)
 
 	logger.Init()
 	log := logger.LogrusLogger
 
 	database.ConnectDatabase(&EnvConfig.DatabaseConnection)
+
+	routes.Init()
+	r := routes.Router
 
 	server := &http.Server{
 		Addr:         ":" + EnvConfig.AppConfig.Port,
