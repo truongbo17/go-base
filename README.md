@@ -66,13 +66,13 @@ Docs
 ## Feature
 
 * I18N
-* Config
-* Command / Console
+* Config ✅
+* Command / Console ✅
 * Schedule
 * Queue
-* Swagger
+* Swagger ✅
 * View
-* Logger
+* Logger ✅
 * Database (DocumentDB(MongoDB), Relation DB(MYSQL))
 * Mail
 * File upload
@@ -83,7 +83,7 @@ Docs
 * Redis
 * GraphQL
 * Http call service
-* Middleware
+* Middleware ✅
 * Filter
 * Push notify to telegram
 * Router

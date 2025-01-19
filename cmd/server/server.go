@@ -26,11 +26,38 @@ var (
 	}
 )
 
+const (
+	// DebugMode app env debug stg.
+	DebugMode = "debug"
+	// ReleaseMode app env debug production.
+	ReleaseMode = "release"
+)
+
+const (
+	debugCode = iota
+	releaseCode
+)
+
+var (
+	ginMode = debugCode
+)
+
 func start() {
 	config.Init()
 	EnvConfig := config.EnvConfig
 
-	if EnvConfig.AppConfig.Env == gin.ReleaseMode {
+	appEnv := EnvConfig.AppConfig.Env
+
+	switch appEnv {
+	case DebugMode:
+		ginMode = debugCode
+	case ReleaseMode:
+		ginMode = releaseCode
+	default:
+		panic("APP_ENV unknown: " + appEnv + " (available mode: debug release)")
+	}
+
+	if appEnv == gin.ReleaseMode {
 		gin.SetMode(gin.ReleaseMode)
 	} else {
 		gin.SetMode(gin.DebugMode)
