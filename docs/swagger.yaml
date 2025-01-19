@@ -1,0 +1,14 @@
+info:
+  contact: {}
+  description: Go-Gin-Base quickly build and develop web applications. restful API,
+    microservice...
+  title: Go Gin Base
+  version: v0.0.1
+paths: {}
+securityDefinitions:
+  BearerAuth:
+    description: Type "Bearer" followed by a space and JWT token.
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
