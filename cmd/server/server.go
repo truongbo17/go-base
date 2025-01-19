@@ -57,7 +57,7 @@ func start() {
 		panic("APP_ENV unknown: " + appEnv + " (available mode: debug release)")
 	}
 
-	if appEnv == gin.ReleaseMode {
+	if appEnv == ReleaseMode {
 		gin.SetMode(gin.ReleaseMode)
 	} else {
 		gin.SetMode(gin.DebugMode)
