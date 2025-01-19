@@ -22,8 +22,16 @@ const (
 
 func (config *Config) validate() error {
 	return validation.ValidateStruct(config,
+		// App
 		validation.Field(&config.AppConfig.Port, is.Port),
 		validation.Field(&config.AppConfig.Env, validation.In(DebugMode, ReleaseMode)),
+
+		// CORS
+		validation.Field(&config.CorsConfig.AllowOrigin, validation.NilOrNotEmpty),
+
+		// Database
+		validation.Field(&config.DatabaseConnection.DatabaseRelation.Port, is.Port, validation.NilOrNotEmpty),
+		validation.Field(&config.DatabaseConnection.DatabaseRelation.Host, is.Host, validation.NilOrNotEmpty),
 
 		//validation.Field(&config.UseRedis, validation.In(true, false)),
 		//validation.Field(&config.RedisDefaultAddr),

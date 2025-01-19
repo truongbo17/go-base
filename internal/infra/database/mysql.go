@@ -16,7 +16,7 @@ func ConnectMySQL(configDB *config.DatabaseRelation) *gorm.DB {
 	}
 	logApp := logger.LogrusLogger
 
-	address := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8mb4&parseTime=True&loc=Local",
+	address := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
 		configDB.Username,
 		configDB.Password,
 		configDB.Host,
