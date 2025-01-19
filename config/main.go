@@ -11,13 +11,14 @@ type Config struct {
 	AppConfig          `mapstructure:",squash"`
 	CorsConfig         `mapstructure:",squash"`
 	DatabaseConnection `mapstructure:",squash"`
+	CacheConfig        `mapstructure:",squash"`
 }
 
 const (
 	// DebugMode app env debug stg.
-	DebugMode = "debug"
+	DebugMode string = "debug"
 	// ReleaseMode app env debug production.
-	ReleaseMode = "release"
+	ReleaseMode string = "release"
 )
 
 func (config *Config) validate() error {
@@ -34,6 +35,8 @@ func (config *Config) validate() error {
 		validation.Field(&config.DatabaseConnection.DatabaseRelation.Host, is.Host),
 
 		// Cache
+		validation.Field(&config.CacheConfig.CacheStore, validation.In(CacheStoreLocal, CacheStoreRedis)),
+
 		//validation.Field(&config.UseRedis, validation.In(true, false)),
 		//validation.Field(&config.RedisDefaultAddr),
 		//
@@ -52,6 +55,7 @@ func setupConfig() *Config {
 	viper.SetDefault("APP_ENV", "debug")
 	viper.SetDefault("APP_PORT", "8000")
 	viper.SetDefault("CORS_ALLOW_ORIGIN", "*")
+	viper.SetDefault("CACHE_STORE", "local")
 
 	viper.AutomaticEnv()
 
