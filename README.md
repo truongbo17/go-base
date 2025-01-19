@@ -55,6 +55,12 @@ Or simple:
   go run main.go server
 ```
 
+Docs
+
+```text
+{{host}}/docs/swagger/index.html
+```
+
 ----
 
 ## Feature

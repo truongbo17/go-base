@@ -5,6 +5,7 @@ import (
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 	"go-base/config"
+	"go-base/docs"
 	"go-base/internal/infra/logger"
 	"go-base/internal/routes"
 	"net/http"
@@ -30,6 +31,8 @@ func start() {
 
 	routes.Init()
 	r := routes.Router
+
+	docs.Init()
 
 	logger.Init()
 	log := logger.LogrusLogger

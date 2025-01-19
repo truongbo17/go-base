@@ -19,4 +19,6 @@ func Init() {
 	LoadPublicRouter(Router)
 
 	routers.LoadAuthModuleRouter(Router)
+
+	LoadSwaggerRouter(Router)
 }
