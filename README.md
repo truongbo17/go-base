@@ -73,7 +73,7 @@ Docs
 * Swagger ✅
 * View
 * Logger ✅
-* Database (DocumentDB(MongoDB), Relation DB(MYSQL))
+* Database (DocumentDB(MongoDB), Relation DB(MYSQL)) ✅
 * Mail
 * File upload
 * Upload file (local, s3)
