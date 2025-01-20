@@ -3,11 +3,14 @@ package controllers
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"go-base/internal/infra/cache"
-	"time"
+	"github.com/gin-gonic/gin/binding"
+	"go-base/internal/app/auth/services"
+	"go-base/internal/app/auth/validators"
 )
 
 type UserController struct{}
+
+var userService = new(services.UserService)
 
 // Register godoc
 // @Summary      Register
@@ -20,19 +23,13 @@ type UserController struct{}
 // @Failure      400  {object}  models.Response
 // @Router       /auth/register [post]
 func (userController *UserController) Register(context *gin.Context) {
-	err := cache.Cache.Set("key1", "value11111", 10*time.Second)
-	if err != nil {
-		fmt.Println("Set error:", err)
-	}
+	var requestBody validators.RegisterRequest
+	_ = context.ShouldBindBodyWith(&requestBody, binding.JSON)
 
-	value, err := cache.Cache.Get("key112")
-	if err != nil {
-		fmt.Println("Get error:", err)
-	} else {
-		fmt.Println("Get value:", value)
-	}
+	fmt.Println(requestBody)
 
-	context.String(200, "OK")
+	isExistEmail := userService.CheckExistEmail(requestBody.Email)
+	fmt.Println(isExistEmail)
 }
 
 // Login godoc
@@ -46,7 +43,6 @@ func (userController *UserController) Register(context *gin.Context) {
 // @Failure      400  {object}  models.Response
 // @Router       /auth/login [post]
 func (userController *UserController) Login(context *gin.Context) {
-
 }
 
 // Refresh godoc

@@ -22,7 +22,7 @@ func ConnectMongoDB(configDB *config.DatabaseMongo) *mongo.Client {
 		}
 		err = client.Ping(context.TODO(), nil)
 		MongoClient = client
-		logApp.Infoln("Connect database mongodb success at " + configDB.Uri)
+		logApp.Infoln("Connect database mongodb success")
 		if err != nil {
 			panic(err)
 		}

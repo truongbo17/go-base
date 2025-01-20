@@ -92,7 +92,6 @@ Build
 * Middleware ✅
 * Filter
 * Push notify to telegram
-* Router
 * Worker
 
 ----

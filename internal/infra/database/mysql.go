@@ -31,7 +31,7 @@ func ConnectMySQL(configDB *config.DatabaseRelation) *gorm.DB {
 	}), &gorm.Config{})
 
 	if err != nil {
-		panic(`Connected failed, check your MySql with ` + address)
+		panic("Connected failed, check your MySql")
 	}
 
 	// Migrate the schema
@@ -42,7 +42,7 @@ func ConnectMySQL(configDB *config.DatabaseRelation) *gorm.DB {
 
 	DB = db
 
-	logApp.Infoln(`Successfully connected to Mysql at ` + address)
+	logApp.Infoln("Successfully connected to Mysql")
 
 	return db
 }
