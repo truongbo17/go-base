@@ -20,8 +20,9 @@ type UserController struct{}
 // @Router       /auth/register [post]
 func (userController *UserController) Register(context *gin.Context) {
 	cache := cacheManager.Cache
-	err := cache.Set("test", "ok", 20)
-	fmt.Println(err)
+	err := cache.Set("test123132", "ok", 20)
+	value, err1 := cache.Get("test123132", "12")
+	fmt.Println(err, err1, value)
 	context.String(200, "OK")
 }
 

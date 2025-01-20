@@ -61,6 +61,12 @@ Docs
 {{host}}/docs/swagger/index.html
 ```
 
+Build
+
+```shell
+  make build
+```
+
 ----
 
 ## Feature
