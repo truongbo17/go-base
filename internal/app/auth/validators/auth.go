@@ -44,14 +44,58 @@ func RegisterValidator() gin.HandlerFunc {
 	}
 }
 
+type LoginRequest struct {
+	Email    string `json:"email"`
+	Password string `json:"password"`
+}
+
+func (a LoginRequest) Validate() error {
+	return validation.ValidateStruct(&a,
+		validation.Field(&a.Email, validation.Required, is.Email),
+		validation.Field(&a.Password, passwordRule...),
+	)
+}
+
 func LoginValidator() gin.HandlerFunc {
 	return func(context *gin.Context) {
+
+		var registerRequest RegisterRequest
+		_ = context.ShouldBindBodyWith(&registerRequest, binding.JSON)
+
+		if err := registerRequest.Validate(); err != nil {
+			_ = context.AbortWithError(http.StatusUnprocessableEntity, err)
+			return
+		}
+
 		context.Next()
 	}
 }
 
+type RefreshRequest struct {
+	Token string `json:"token"`
+}
+
+func (a RefreshRequest) Validate() error {
+	return validation.ValidateStruct(&a,
+		validation.Field(
+			&a.Token,
+			validation.Required,
+			validation.Match(regexp.MustCompile("^\\S+$")).Error("cannot contain whitespaces"),
+		),
+	)
+}
+
 func RefreshValidator() gin.HandlerFunc {
 	return func(context *gin.Context) {
+
+		var registerRequest RegisterRequest
+		_ = context.ShouldBindBodyWith(&registerRequest, binding.JSON)
+
+		if err := registerRequest.Validate(); err != nil {
+			_ = context.AbortWithError(http.StatusUnprocessableEntity, err)
+			return
+		}
+
 		context.Next()
 	}
 }
