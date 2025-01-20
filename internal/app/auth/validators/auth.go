@@ -36,7 +36,7 @@ func RegisterValidator() gin.HandlerFunc {
 		_ = context.ShouldBindBodyWith(&registerRequest, binding.JSON)
 
 		if err := registerRequest.Validate(); err != nil {
-			models.SendErrorResponse(context, http.StatusBadRequest, err.Error())
+			_ = context.AbortWithError(http.StatusUnprocessableEntity, err)
 			return
 		}
 
