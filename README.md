@@ -79,8 +79,8 @@ Docs
 * Upload file (local, s3)
 * Kafka (producer, consumer)
 * Authentication (JWT access token, refresh token, Google auth)
-* Cache (local, redis)
-* Redis
+* Cache (local, redis) ✅
+* Redis ✅
 * GraphQL
 * Http call service
 * Middleware ✅
