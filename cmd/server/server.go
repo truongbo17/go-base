@@ -10,6 +10,7 @@ import (
 	"go-base/internal/infra/cache"
 	"go-base/internal/infra/database"
 	"go-base/internal/infra/logger"
+	"go-base/internal/infra/redis"
 	"go-base/internal/routes"
 	"net/http"
 	"os"
@@ -40,13 +41,13 @@ func start() {
 		gin.SetMode(gin.DebugMode)
 	}
 
-	//redis.ConnectRedis()
+	logger.Init()
+	log := logger.LogrusLogger
+
+	redis.ConnectRedis()
 
 	storeCache := EnvConfig.CacheConfig.CacheStore
 	cache.InitCache(storeCache)
-
-	logger.Init()
-	log := logger.LogrusLogger
 
 	database.ConnectDatabase(&EnvConfig.DatabaseConnection)
 

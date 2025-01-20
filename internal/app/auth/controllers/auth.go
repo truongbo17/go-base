@@ -1,6 +1,10 @@
 package controllers
 
-import "github.com/gin-gonic/gin"
+import (
+	"fmt"
+	"github.com/gin-gonic/gin"
+	cacheManager "go-base/internal/infra/cache"
+)
 
 type UserController struct{}
 
@@ -15,6 +19,9 @@ type UserController struct{}
 // @Failure      400  {object}  models.Response
 // @Router       /auth/register [post]
 func (userController *UserController) Register(context *gin.Context) {
+	cache := cacheManager.Cache
+	err := cache.Set("test", "ok", 20)
+	fmt.Println(err)
 	context.String(200, "OK")
 }
 

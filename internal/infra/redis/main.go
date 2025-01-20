@@ -1,6 +1,7 @@
 package redis
 
 import (
+	"context"
 	"fmt"
 	"github.com/go-redis/redis/v8"
 	"go-base/config"
@@ -14,8 +15,6 @@ func ConnectRedis() *redis.Client {
 	EnvConfig := config.EnvConfig
 	configRedis := EnvConfig.CacheConfig
 
-	fmt.Println(1332313123, configRedis)
-
 	redisClient := redis.NewClient(&redis.Options{
 		Addr:     fmt.Sprintf("%s:%s", configRedis.RedisHost, configRedis.RedisPort),
 		Username: configRedis.RedisUsername,
@@ -24,7 +23,16 @@ func ConnectRedis() *redis.Client {
 
 	ClientRedis = redisClient
 
+	checkRedisConnection(redisClient)
+
 	logApp.Infoln("Success connect to Redis.")
 
 	return redisClient
+}
+
+func checkRedisConnection(client *redis.Client) {
+	err := client.Ping(context.Background()).Err()
+	if err != nil {
+		panic(err)
+	}
 }

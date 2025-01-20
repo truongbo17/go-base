@@ -3,6 +3,7 @@ package cache
 import (
 	"github.com/chenyahui/gin-cache/persist"
 	"go-base/config"
+	"go-base/internal/infra/logger"
 	"time"
 )
 
@@ -52,4 +53,6 @@ func InitCache(store string) {
 	} else {
 		Cache = &MemoryCache{store: InitCacheLocal()}
 	}
+	logApp := logger.LogrusLogger
+	logApp.Infoln("Success init cache with store " + store)
 }
