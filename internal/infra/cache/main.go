@@ -1,58 +1,26 @@
 package cache
 
 import (
-	"github.com/chenyahui/gin-cache/persist"
-	"go-base/config"
 	"go-base/internal/infra/logger"
+	"go-base/internal/infra/redis"
 	"time"
 )
 
-type StoreCache interface {
+type ICache interface {
 	Set(key string, value interface{}, ttl time.Duration) error
-	Get(key string, value interface{}) (interface{}, error)
+	Get(key string) (interface{}, error)
 	Delete(key string) error
 }
 
-type RedisCache struct {
-	store *persist.RedisStore
-}
+var Cache ICache
 
-func (r *RedisCache) Set(key string, value interface{}, ttl time.Duration) error {
-	return r.store.Set(key, value, ttl)
-}
-
-func (r *RedisCache) Get(key string, value interface{}) (interface{}, error) {
-	return r.store.Get(key, value), nil
-}
-
-func (r *RedisCache) Delete(key string) error {
-	return r.store.Delete(key)
-}
-
-type MemoryCache struct {
-	store *persist.MemoryStore
-}
-
-func (m *MemoryCache) Set(key string, value interface{}, ttl time.Duration) error {
-	return m.store.Set(key, value, ttl)
-}
-
-func (m *MemoryCache) Get(key string, value interface{}) (interface{}, error) {
-	return m.store.Get(key, value), nil
-}
-
-func (m *MemoryCache) Delete(key string) error {
-	return m.store.Delete(key)
-}
-
-var Cache StoreCache
-
-func InitCache(store string) {
-	if store == config.CacheStoreRedis {
-		Cache = &RedisCache{store: InitCacheRedis()}
+func InitCache(storeCache string) {
+	if storeCache == "redis" {
+		Cache = NewRedisCache(redis.ClientRedis)
 	} else {
-		Cache = &MemoryCache{store: InitCacheLocal()}
+		Cache = NewLocalCache(5*time.Minute, 10*time.Minute)
 	}
+
 	logApp := logger.LogrusLogger
-	logApp.Infoln("Success init cache with store " + store)
+	logApp.Infoln("Success init cache with store " + storeCache)
 }

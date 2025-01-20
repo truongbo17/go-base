@@ -3,7 +3,8 @@ package controllers
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
-	cacheManager "go-base/internal/infra/cache"
+	"go-base/internal/infra/cache"
+	"time"
 )
 
 type UserController struct{}
@@ -19,10 +20,18 @@ type UserController struct{}
 // @Failure      400  {object}  models.Response
 // @Router       /auth/register [post]
 func (userController *UserController) Register(context *gin.Context) {
-	cache := cacheManager.Cache
-	err := cache.Set("test123132", "ok", 20)
-	value, err1 := cache.Get("test123132", "12")
-	fmt.Println(err, err1, value)
+	err := cache.Cache.Set("key1", "value11111", 10*time.Second)
+	if err != nil {
+		fmt.Println("Set error:", err)
+	}
+
+	value, err := cache.Cache.Get("key112")
+	if err != nil {
+		fmt.Println("Get error:", err)
+	} else {
+		fmt.Println("Get value:", value)
+	}
+
 	context.String(200, "OK")
 }
 
