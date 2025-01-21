@@ -6,8 +6,6 @@ import (
 	"go-base/internal/infra/repository"
 )
 
-var db = database.DB
-
 type UserRepository struct {
 	*repository.BaseRepository[model.User]
 }

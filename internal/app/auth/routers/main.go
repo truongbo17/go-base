@@ -7,7 +7,7 @@ import (
 )
 
 func LoadAuthModuleRouter(r *gin.Engine) *gin.RouterGroup {
-	var userController = new(controllers.UserController)
+	userController := controllers.NewUserController()
 
 	groupAuth := r.Group("/auth")
 	{

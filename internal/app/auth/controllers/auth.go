@@ -4,13 +4,22 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
+	"go-base/internal/app/auth/repositories"
 	"go-base/internal/app/auth/services"
 	"go-base/internal/app/auth/validators"
 )
 
-type UserController struct{}
+type UserController struct {
+	UserService *services.UserService
+}
 
-var userService = new(services.UserService)
+func NewUserController() *UserController {
+	userRepository := repositories.NewUserRepository()
+	userService := services.NewUserService(userRepository)
+	return &UserController{
+		UserService: userService,
+	}
+}
 
 // Register godoc
 // @Summary      Register
@@ -28,7 +37,7 @@ func (userController *UserController) Register(context *gin.Context) {
 
 	fmt.Println(requestBody)
 
-	isExistEmail := userService.CheckExistEmail(requestBody.Email)
+	isExistEmail := userController.UserService.CheckExistEmail(requestBody.Email)
 	fmt.Println(isExistEmail)
 }
 
