@@ -1,12 +1,13 @@
 package controllers
 
 import (
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
 	"go-base/internal/app/auth/repositories"
 	"go-base/internal/app/auth/services"
 	"go-base/internal/app/auth/validators"
+	"go-base/internal/response"
+	"net/http"
 )
 
 type UserController struct {
@@ -35,10 +36,18 @@ func (userController *UserController) Register(context *gin.Context) {
 	var requestBody validators.RegisterRequest
 	_ = context.ShouldBindBodyWith(&requestBody, binding.JSON)
 
-	fmt.Println(requestBody)
-
 	isExistEmail := userController.UserService.CheckExistEmail(requestBody.Email)
-	fmt.Println(isExistEmail)
+	if isExistEmail {
+		context.JSON(http.StatusOK, response.BaseResponse{
+			Status:     false,
+			StatusCode: 1000,
+			RequestId:  context.GetString("x-request-id"),
+			Data:       nil,
+			Message:    "Email already exist",
+			Error:      nil,
+		})
+		return
+	}
 }
 
 // Login godoc
