@@ -3,6 +3,7 @@ package utils
 import (
 	"encoding/json"
 	"reflect"
+	"strings"
 )
 
 func JSONHelper(input interface{}) (interface{}, error) {
@@ -51,4 +52,9 @@ func JSONResponse(data interface{}) (map[string]interface{}, error) {
 	}
 
 	return result, nil
+}
+
+func FormatStackTrace(stack []byte) string {
+	lines := strings.Split(string(stack), "\n")
+	return strings.Join(lines, "\n")
 }

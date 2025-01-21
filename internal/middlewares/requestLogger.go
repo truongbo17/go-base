@@ -1,7 +1,9 @@
 package middlewares
 
 import (
+	"encoding/json"
 	"github.com/gin-gonic/gin"
+	"github.com/sirupsen/logrus"
 	"go-base/internal/infra/logger"
 	"time"
 )
@@ -13,7 +15,7 @@ type RequestLog struct {
 	Method    string  `json:"method"`
 	Path      string  `json:"path"`
 	Latency   float64 `json:"latency"`
-	Timestamp string  `json:"string"`
+	Timestamp string  `json:"timestamp'"`
 }
 
 func RequestLogger() gin.HandlerFunc {
@@ -40,6 +42,14 @@ func RequestLogger() gin.HandlerFunc {
 		}
 
 		log := logger.LogrusLogger
-		log.Infof("RequestLog: %+v", logData)
+
+		logDataJSON, err := json.Marshal(logData)
+		if err != nil {
+			logrus.Error("Failed to marshal log data to JSON: ", err)
+		}
+
+		log.WithFields(logrus.Fields{
+			"log": string(logDataJSON),
+		}).Infoln("request logger")
 	}
 }
