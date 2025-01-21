@@ -27,9 +27,9 @@ func NewUserController() *UserController {
 // @Tags         auth
 // @Accept       json
 // @Produce      json
-// @Param        req  body      models.RegisterRequest true "Register Request"
-// @Success      200  {object}  models.Response
-// @Failure      400  {object}  models.Response
+// @Param        req  body      validators.RegisterRequest true "Register Request"
+// @Success      200  {object}  response.BaseResponse
+// @Failure      400  {object}  response.BaseResponse
 // @Router       /auth/register [post]
 func (userController *UserController) Register(context *gin.Context) {
 	var requestBody validators.RegisterRequest
@@ -47,9 +47,9 @@ func (userController *UserController) Register(context *gin.Context) {
 // @Tags         auth
 // @Accept       json
 // @Produce      json
-// @Param        req  body      models.LoginRequest true "Login Request"
-// @Success      200  {object}  models.Response
-// @Failure      400  {object}  models.Response
+// @Param        req  body      validators.LoginRequest true "Login Request"
+// @Success      200  {object}  response.BaseResponse
+// @Failure      400  {object}  response.BaseResponse
 // @Router       /auth/login [post]
 func (userController *UserController) Login(context *gin.Context) {
 }
@@ -60,9 +60,9 @@ func (userController *UserController) Login(context *gin.Context) {
 // @Tags         auth
 // @Accept       json
 // @Produce      json
-// @Param        req  body      models.RefreshRequest true "Refresh Request"
-// @Success      200  {object}  models.Response
-// @Failure      400  {object}  models.Response
+// @Param        req  body      validators.RefreshRequest true "Refresh Request"
+// @Success      200  {object}  response.BaseResponse
+// @Failure      400  {object}  response.BaseResponse
 // @Router       /auth/refresh [post]
 func (userController *UserController) Refresh(context *gin.Context) {
 

@@ -1,3 +1,38 @@
+definitions:
+  response.BaseResponse:
+    properties:
+      data: {}
+      error: {}
+      message:
+        type: string
+      requestId:
+        type: string
+      status:
+        type: boolean
+      statusCode:
+        type: integer
+    type: object
+  validators.LoginRequest:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    type: object
+  validators.RefreshRequest:
+    properties:
+      token:
+        type: string
+    type: object
+  validators.RegisterRequest:
+    properties:
+      email:
+        type: string
+      name:
+        type: string
+      password:
+        type: string
+    type: object
 info:
   contact:
     email: truongnq017@gmail.com
@@ -8,6 +43,84 @@ info:
   title: Go Gin Base
   version: v0.0.1
 paths:
+  /auth/login:
+    post:
+      consumes:
+      - application/json
+      description: login a user
+      parameters:
+      - description: Login Request
+        in: body
+        name: req
+        required: true
+        schema:
+          $ref: '#/definitions/validators.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.BaseResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.BaseResponse'
+      summary: Login
+      tags:
+      - auth
+  /auth/refresh:
+    post:
+      consumes:
+      - application/json
+      description: refreshes a user token
+      parameters:
+      - description: Refresh Request
+        in: body
+        name: req
+        required: true
+        schema:
+          $ref: '#/definitions/validators.RefreshRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.BaseResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.BaseResponse'
+      summary: Refresh
+      tags:
+      - auth
+  /auth/register:
+    post:
+      consumes:
+      - application/json
+      description: registers a user
+      parameters:
+      - description: Register Request
+        in: body
+        name: req
+        required: true
+        schema:
+          $ref: '#/definitions/validators.RegisterRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.BaseResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.BaseResponse'
+      summary: Register
+      tags:
+      - auth
   /ping:
     get:
       consumes:
@@ -22,7 +135,7 @@ paths:
             type: string
       summary: Ping endpoint
       tags:
-      - Public
+      - Public APi
 securityDefinitions:
   BearerAuth:
     description: Type "Bearer" followed by a space and JWT token.
