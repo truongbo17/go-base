@@ -41,6 +41,10 @@ So why I use choose Gin framework?
   cp .env.example .env
 ```
 
+```shell
+  go run main.go migrate
+```
+
 ### Run the Application
 
 Run with air(hot reload):
