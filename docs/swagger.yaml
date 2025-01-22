@@ -1,4 +1,25 @@
 definitions:
+  request.LoginRequest:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    type: object
+  request.RefreshRequest:
+    properties:
+      token:
+        type: string
+    type: object
+  request.RegisterRequest:
+    properties:
+      email:
+        type: string
+      name:
+        type: string
+      password:
+        type: string
+    type: object
   response.BaseResponse:
     properties:
       data: {}
@@ -11,27 +32,6 @@ definitions:
         type: boolean
       statusCode:
         type: integer
-    type: object
-  validators.LoginRequest:
-    properties:
-      email:
-        type: string
-      password:
-        type: string
-    type: object
-  validators.RefreshRequest:
-    properties:
-      token:
-        type: string
-    type: object
-  validators.RegisterRequest:
-    properties:
-      email:
-        type: string
-      name:
-        type: string
-      password:
-        type: string
     type: object
 info:
   contact:
@@ -54,7 +54,7 @@ paths:
         name: req
         required: true
         schema:
-          $ref: '#/definitions/validators.LoginRequest'
+          $ref: '#/definitions/request.LoginRequest'
       produces:
       - application/json
       responses:
@@ -80,7 +80,7 @@ paths:
         name: req
         required: true
         schema:
-          $ref: '#/definitions/validators.RefreshRequest'
+          $ref: '#/definitions/request.RefreshRequest'
       produces:
       - application/json
       responses:
@@ -106,7 +106,7 @@ paths:
         name: req
         required: true
         schema:
-          $ref: '#/definitions/validators.RegisterRequest'
+          $ref: '#/definitions/request.RegisterRequest'
       produces:
       - application/json
       responses:
