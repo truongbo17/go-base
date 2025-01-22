@@ -21,6 +21,7 @@ var rootCmd = &cobra.Command{
 func init() {
 	rootCmd.AddCommand(server.StartServerCmd)
 	rootCmd.AddCommand(cli.VersionCmd)
+	rootCmd.AddCommand(cli.MigrateCmd)
 }
 
 func Execute(fs embed.FS) {

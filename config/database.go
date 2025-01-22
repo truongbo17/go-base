@@ -5,7 +5,10 @@ type DatabaseConnection struct {
 	DatabaseMongo    `mapstructure:",squash"`
 }
 
-const DefaultStringSizeMySql uint = 256
+const (
+	DefaultStringSizeMySql uint   = 256
+	TableMigrate           string = "go_migrations"
+)
 
 type DatabaseRelation struct {
 	Username string `mapstructure:"DB_USER"`
