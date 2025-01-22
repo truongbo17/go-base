@@ -18,8 +18,9 @@ type UserController struct {
 
 func NewUserController() *UserController {
 	userRepository := repositories.NewUserRepository()
+	tokenRepository := repositories.NewTokenRepository()
 	userService := services.NewUserService(userRepository)
-	authService := services.NewAuthService()
+	authService := services.NewAuthService(tokenRepository)
 	return &UserController{
 		UserService: userService,
 		AuthService: authService,

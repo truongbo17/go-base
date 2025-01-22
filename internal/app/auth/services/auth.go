@@ -3,14 +3,18 @@ package services
 import (
 	"errors"
 	"go-base/internal/app/auth/model"
+	"go-base/internal/app/auth/repositories"
 	"golang.org/x/crypto/bcrypt"
 )
 
 type AuthService struct {
+	TokenRepository *repositories.TokenRepository
 }
 
-func NewAuthService() *AuthService {
-	return &AuthService{}
+func NewAuthService(tokenRepository *repositories.TokenRepository) *AuthService {
+	return &AuthService{
+		TokenRepository: tokenRepository,
+	}
 }
 
 func (authService AuthService) GeneratePassword(plainPassword string) ([]byte, error) {

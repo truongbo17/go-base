@@ -15,7 +15,7 @@ var CreateUsersTable = &gormigrate.Migration{
 				email VARCHAR(100) UNIQUE NOT NULL,
 				password VARCHAR(100) NULL DEFAULT '',
 				created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-				updated_at DATETIME DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+				updated_at DATETIME NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP
 			);
 		`).Error
 	},

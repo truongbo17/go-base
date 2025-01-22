@@ -6,13 +6,14 @@ import (
 )
 
 var CreateTokensTable = &gormigrate.Migration{
-	ID: "2025012201",
+	ID: "2025012202",
 	Migrate: func(tx *gorm.DB) error {
 		return tx.Exec(`
 			CREATE TABLE tokens (
 				id INT AUTO_INCREMENT PRIMARY KEY,
-				created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-				updated_at DATETIME DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+				token VARCHAR(255) NOT NULL,
+				type VARCHAR(20) NOT NULL,
+				expires_at DATETIME DEFAULT CURRENT_TIMESTAMP
 			);
 		`).Error
 	},
