@@ -5,8 +5,13 @@ import (
 	"time"
 )
 
+const (
+	TokenTypeAccess  = "access"
+	TokenTypeRefresh = "refresh"
+)
+
 type Token struct {
-	models.BasicModel
+	models.BasicIDModel
 
 	Token     string    `json:"token" gorm:"size:255;not null"`
 	Type      *string   `json:"type" gorm:"size:20;null"`

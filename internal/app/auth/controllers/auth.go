@@ -72,8 +72,8 @@ func (userController *UserController) Register(context *gin.Context) {
 		StatusCode: http.StatusOK,
 		RequestId:  context.GetString("x-request-id"),
 		Data: responseAuth.UserRegisterResponse{
-			AccessToken:  accessToken,
-			RefreshToken: refreshToken,
+			AccessToken:  accessToken.Token,
+			RefreshToken: refreshToken.Token,
 		},
 		Message: "Success",
 		Error:   nil,

@@ -60,8 +60,9 @@ func (userService *UserService) CheckExistEmail(email string) bool {
 
 func (userService *UserService) CreateUser(userRequest request.RegisterRequest) *model.User {
 	newUser := &model.User{
-		Name:  userRequest.Name,
-		Email: userRequest.Email,
+		Name:     userRequest.Name,
+		Email:    userRequest.Email,
+		Password: &userRequest.Password,
 	}
 	err := userService.UserRepository.Create(newUser)
 	if err != nil {
