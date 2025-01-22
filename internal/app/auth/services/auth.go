@@ -7,7 +7,6 @@ import (
 	"go-base/config"
 	"go-base/internal/app/auth/model"
 	"go-base/internal/app/auth/repositories"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 	"golang.org/x/crypto/bcrypt"
 	"time"
 )
@@ -98,9 +97,8 @@ func (authService AuthService) VerifyToken(token string, tokenType string) (*mod
 		return nil, errors.New("token is expired")
 	}
 
-	userId, _ := primitive.ObjectIDFromHex(claims.Subject)
 	condition := map[string]interface{}{
-		"user": userId,
+		"user": claims.Subject,
 	}
 	tokenModel, err := authService.TokenRepository.FindOneByCondition(condition)
 	if err != nil || tokenModel == nil {
