@@ -4,7 +4,7 @@ import (
 	"errors"
 	"go-base/internal/app/auth/model"
 	"go-base/internal/app/auth/repositories"
-	"go-base/internal/app/auth/validators"
+	"go-base/internal/app/auth/request"
 	"go-base/internal/infra/cache"
 	"gorm.io/gorm"
 	"strconv"
@@ -58,7 +58,7 @@ func (userService *UserService) CheckExistEmail(email string) bool {
 	return isExistCheck
 }
 
-func (userService *UserService) CreateUser(userRequest validators.RegisterRequest) *model.User {
+func (userService *UserService) CreateUser(userRequest request.RegisterRequest) *model.User {
 	newUser := &model.User{
 		Name:  userRequest.Name,
 		Email: userRequest.Email,

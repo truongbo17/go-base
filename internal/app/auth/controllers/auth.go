@@ -4,9 +4,9 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
 	"go-base/internal/app/auth/repositories"
+	"go-base/internal/app/auth/request"
 	responseAuth "go-base/internal/app/auth/response"
 	"go-base/internal/app/auth/services"
-	"go-base/internal/app/auth/validators"
 	"go-base/internal/response"
 	"net/http"
 )
@@ -32,12 +32,12 @@ func NewUserController() *UserController {
 // @Tags         auth
 // @Accept       json
 // @Produce      json
-// @Param        req  body      validators.RegisterRequest true "Register Request"
+// @Param        req  body      request.RegisterRequest true "Register Request"
 // @Success      200  {object}  response.BaseResponse
 // @Failure      400  {object}  response.BaseResponse
 // @Router       /auth/register [post]
 func (userController *UserController) Register(context *gin.Context) {
-	var requestBody validators.RegisterRequest
+	var requestBody request.RegisterRequest
 	_ = context.ShouldBindBodyWith(&requestBody, binding.JSON)
 
 	isExistEmail := userController.UserService.CheckExistEmail(requestBody.Email)
@@ -85,7 +85,7 @@ func (userController *UserController) Register(context *gin.Context) {
 // @Tags         auth
 // @Accept       json
 // @Produce      json
-// @Param        req  body      validators.LoginRequest true "Login Request"
+// @Param        req  body      request.LoginRequest true "Login Request"
 // @Success      200  {object}  response.BaseResponse
 // @Failure      400  {object}  response.BaseResponse
 // @Router       /auth/login [post]
@@ -98,7 +98,7 @@ func (userController *UserController) Login(context *gin.Context) {
 // @Tags         auth
 // @Accept       json
 // @Produce      json
-// @Param        req  body      validators.RefreshRequest true "Refresh Request"
+// @Param        req  body      request.RefreshRequest true "Refresh Request"
 // @Success      200  {object}  response.BaseResponse
 // @Failure      400  {object}  response.BaseResponse
 // @Router       /auth/refresh [post]
