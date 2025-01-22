@@ -5,21 +5,18 @@ import (
 	"gorm.io/gorm"
 )
 
-var CreateUsersTable = &gormigrate.Migration{
+var CreateTokensTable = &gormigrate.Migration{
 	ID: "2025012201",
 	Migrate: func(tx *gorm.DB) error {
 		return tx.Exec(`
-			CREATE TABLE users (
+			CREATE TABLE tokens (
 				id INT AUTO_INCREMENT PRIMARY KEY,
-				name VARCHAR(255) NOT NULL,
-				email VARCHAR(100) UNIQUE NOT NULL,
-				password VARCHAR(100) NULL DEFAULT '',
 				created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
 				updated_at DATETIME DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
 			);
 		`).Error
 	},
 	Rollback: func(tx *gorm.DB) error {
-		return tx.Exec("DROP TABLE IF EXISTS users;").Error
+		return tx.Exec("DROP TABLE IF EXISTS tokens;").Error
 	},
 }
