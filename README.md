@@ -46,6 +46,10 @@ So why I use choose Gin framework?
 Run with air(hot reload):
 
 ```shell
+  go install github.com/air-verse/air@latest
+```
+
+```shell
   air server
 ```
 

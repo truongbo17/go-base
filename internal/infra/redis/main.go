@@ -11,23 +11,28 @@ import (
 var ClientRedis *redis.Client
 
 func ConnectRedis() *redis.Client {
-	logApp := logger.LogrusLogger
 	EnvConfig := config.EnvConfig
 	configRedis := EnvConfig.CacheConfig
 
-	redisClient := redis.NewClient(&redis.Options{
-		Addr:     fmt.Sprintf("%s:%s", configRedis.RedisHost, configRedis.RedisPort),
-		Username: configRedis.RedisUsername,
-		Password: configRedis.RedisPassword,
-	})
+	if configRedis.RedisHost != "" {
+		logApp := logger.LogrusLogger
 
-	ClientRedis = redisClient
+		redisClient := redis.NewClient(&redis.Options{
+			Addr:     fmt.Sprintf("%s:%s", configRedis.RedisHost, configRedis.RedisPort),
+			Username: configRedis.RedisUsername,
+			Password: configRedis.RedisPassword,
+		})
 
-	checkRedisConnection(redisClient)
+		ClientRedis = redisClient
 
-	logApp.Infoln("Success connect to Redis.")
+		checkRedisConnection(redisClient)
 
-	return redisClient
+		logApp.Infoln("Success connect to Redis.")
+
+		return redisClient
+	}
+
+	return nil
 }
 
 func checkRedisConnection(client *redis.Client) {
