@@ -3,6 +3,7 @@ package controllers
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
+	"github.com/jinzhu/copier"
 	"go-base/internal/app/auth/repositories"
 	"go-base/internal/app/auth/request"
 	responseAuth "go-base/internal/app/auth/response"
@@ -34,7 +35,7 @@ func NewUserController() *UserController {
 // @Accept       json
 // @Produce      json
 // @Param        req  body      request.RegisterRequest true "Register Request"
-// @Success      200  {object}  response.BaseResponse
+// @Success      200  {object}  response.UserRegisterResponse
 // @Failure      400  {object}  response.BaseResponse
 // @Router       /auth/register [post]
 func (userController *UserController) Register(context *gin.Context) {
@@ -67,13 +68,19 @@ func (userController *UserController) Register(context *gin.Context) {
 		panic(err)
 	}
 
+	userInfo := responseAuth.UserInfo{}
+	_ = copier.Copy(&userInfo, &user)
+
 	context.JSON(http.StatusOK, response.BaseResponse{
 		Status:     true,
 		StatusCode: http.StatusOK,
 		RequestId:  context.GetString("x-request-id"),
 		Data: responseAuth.UserRegisterResponse{
-			AccessToken:  accessToken.Token,
-			RefreshToken: refreshToken.Token,
+			Token: responseAuth.Token{
+				AccessToken:  accessToken.Token,
+				RefreshToken: refreshToken.Token,
+			},
+			User: userInfo,
 		},
 		Message: "Success",
 		Error:   nil,

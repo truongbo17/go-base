@@ -2,6 +2,7 @@ package services
 
 import (
 	"errors"
+	"fmt"
 	"go-base/internal/app/auth/model"
 	"go-base/internal/app/auth/repositories"
 	"go-base/internal/app/auth/request"
@@ -53,7 +54,7 @@ func (userService *UserService) CheckExistEmail(email string) bool {
 		return user != nil
 	}
 
-	isExistCheck, _ := strconv.ParseBool(isExist.(string))
+	isExistCheck, _ := strconv.ParseBool(fmt.Sprintf("%t", isExist))
 
 	return isExistCheck
 }
