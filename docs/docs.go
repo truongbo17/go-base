@@ -127,7 +127,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/response.BaseResponse"
+                            "$ref": "#/definitions/response.UserRegisterResponse"
                         }
                     },
                     "400": {
@@ -205,14 +205,56 @@ const docTemplate = `{
                 "message": {
                     "type": "string"
                 },
-                "requestId": {
+                "request_id": {
                     "type": "string"
                 },
                 "status": {
                     "type": "boolean"
                 },
-                "statusCode": {
+                "status_code": {
                     "type": "integer"
+                }
+            }
+        },
+        "response.Token": {
+            "type": "object",
+            "properties": {
+                "access_token": {
+                    "type": "string"
+                },
+                "refresh_token": {
+                    "type": "string"
+                }
+            }
+        },
+        "response.UserInfo": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                }
+            }
+        },
+        "response.UserRegisterResponse": {
+            "type": "object",
+            "properties": {
+                "token": {
+                    "$ref": "#/definitions/response.Token"
+                },
+                "user": {
+                    "$ref": "#/definitions/response.UserInfo"
                 }
             }
         }

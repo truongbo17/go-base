@@ -5,10 +5,7 @@ import (
 )
 
 type BasicWithDeleteModel struct {
-	BasicIDModel
-	BasicDateModel
-	BasicCreateDateModel
-	BasicUpdateDateModel
+	BasicModel
 	BasicDeleteDateModel
 }
 
@@ -24,8 +21,8 @@ type BasicIDModel struct {
 }
 
 type BasicDateModel struct {
-	CreatedAt time.Time `json:"created_at" gorm:"autoCreateTime"`
-	UpdatedAt time.Time `json:"updated_at" gorm:"autoUpdateTime"`
+	BasicCreateDateModel
+	BasicUpdateDateModel
 }
 
 type BasicCreateDateModel struct {

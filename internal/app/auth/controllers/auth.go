@@ -1,14 +1,17 @@
 package controllers
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
 	"github.com/jinzhu/copier"
+	"go-base/internal/app/auth/model"
 	"go-base/internal/app/auth/repositories"
 	"go-base/internal/app/auth/request"
 	responseAuth "go-base/internal/app/auth/response"
 	"go-base/internal/app/auth/services"
 	"go-base/internal/response"
+	"golang.org/x/crypto/bcrypt"
 	"net/http"
 )
 
@@ -82,7 +85,7 @@ func (userController *UserController) Register(context *gin.Context) {
 			},
 			User: userInfo,
 		},
-		Message: "Success",
+		Message: "Register user successfully.",
 		Error:   nil,
 	})
 }
@@ -98,6 +101,59 @@ func (userController *UserController) Register(context *gin.Context) {
 // @Failure      400  {object}  response.BaseResponse
 // @Router       /auth/login [post]
 func (userController *UserController) Login(context *gin.Context) {
+	var requestBody request.LoginRequest
+	_ = context.ShouldBindBodyWith(&requestBody, binding.JSON)
+
+	user, err := userController.UserService.GetUserByEmail(requestBody.Email)
+	if err != nil {
+		panic(err)
+	}
+
+	res := &response.BaseResponse{
+		Status:     false,
+		StatusCode: 1001,
+		RequestId:  context.GetString("x-request-id"),
+		Data:       nil,
+		Message:    "Email or password is wrong",
+		Error:      nil,
+	}
+	if user == nil {
+		context.JSON(http.StatusOK, res)
+		return
+	}
+
+	password := *user.Password
+	if user.Password == nil {
+		password = ""
+	}
+	err = bcrypt.CompareHashAndPassword([]byte(password), []byte(requestBody.Password))
+	if err != nil {
+		context.JSON(http.StatusOK, res)
+		return
+	}
+
+	accessToken, refreshToken, err := userController.AuthService.GenerateAccessTokens(user)
+	if err != nil {
+		panic(err)
+	}
+
+	userInfo := responseAuth.UserInfo{}
+	_ = copier.Copy(&userInfo, &user)
+
+	context.JSON(http.StatusOK, response.BaseResponse{
+		Status:     true,
+		StatusCode: http.StatusOK,
+		RequestId:  context.GetString("x-request-id"),
+		Data: responseAuth.UserLoginResponse{
+			Token: responseAuth.Token{
+				AccessToken:  accessToken.Token,
+				RefreshToken: refreshToken.Token,
+			},
+			User: userInfo,
+		},
+		Message: "Login user successfully.",
+		Error:   nil,
+	})
 }
 
 // Refresh godoc
@@ -111,5 +167,9 @@ func (userController *UserController) Login(context *gin.Context) {
 // @Failure      400  {object}  response.BaseResponse
 // @Router       /auth/refresh [post]
 func (userController *UserController) Refresh(context *gin.Context) {
+	var requestBody request.RefreshRequest
+	_ = context.ShouldBindBodyWith(&requestBody, binding.JSON)
 
+	token, err := userController.AuthService.VerifyToken(requestBody.Token, model.TokenTypeRefresh)
+	fmt.Println(token, err)
 }

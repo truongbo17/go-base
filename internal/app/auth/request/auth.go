@@ -59,10 +59,10 @@ func (a LoginRequest) Validate() error {
 func LoginValidator() gin.HandlerFunc {
 	return func(context *gin.Context) {
 
-		var registerRequest RegisterRequest
-		_ = context.ShouldBindBodyWith(&registerRequest, binding.JSON)
+		var loginRequest LoginRequest
+		_ = context.ShouldBindBodyWith(&loginRequest, binding.JSON)
 
-		if err := registerRequest.Validate(); err != nil {
+		if err := loginRequest.Validate(); err != nil {
 			_ = context.AbortWithError(http.StatusUnprocessableEntity, err)
 			return
 		}
@@ -88,10 +88,10 @@ func (a RefreshRequest) Validate() error {
 func RefreshValidator() gin.HandlerFunc {
 	return func(context *gin.Context) {
 
-		var registerRequest RegisterRequest
-		_ = context.ShouldBindBodyWith(&registerRequest, binding.JSON)
+		var refreshRequest RefreshRequest
+		_ = context.ShouldBindBodyWith(&refreshRequest, binding.JSON)
 
-		if err := registerRequest.Validate(); err != nil {
+		if err := refreshRequest.Validate(); err != nil {
 			_ = context.AbortWithError(http.StatusUnprocessableEntity, err)
 			return
 		}

@@ -7,6 +7,11 @@ type UserRegisterResponse struct {
 	User  UserInfo `json:"user"`
 }
 
+type UserLoginResponse struct {
+	Token Token    `json:"token"`
+	User  UserInfo `json:"user"`
+}
+
 type UserInfo struct {
 	ID        uint      `json:"id"`
 	Name      string    `json:"name"`

@@ -6,6 +6,7 @@ import (
 	"go-base/config"
 	"go-base/internal/app/auth/model"
 	"go-base/internal/app/auth/repositories"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"golang.org/x/crypto/bcrypt"
 	"strconv"
 	"time"
@@ -71,6 +72,7 @@ func (authService AuthService) createToken(user *model.User, tokenType string, e
 	tokenModel := &model.Token{
 		Token:     tokenString,
 		Type:      &tokenType,
+		User:      user.ID,
 		ExpiresAt: expiresAt,
 	}
 	err = authService.TokenRepository.Create(tokenModel)
@@ -81,6 +83,29 @@ func (authService AuthService) createToken(user *model.User, tokenType string, e
 	return tokenModel, nil
 }
 
-func (authService AuthService) VerifyToken(accessToken string) {
-	return
+func (authService AuthService) VerifyToken(token string, tokenType string) (any, error) {
+	claims := &model.UserClaims{}
+	configAuth := config.EnvConfig.AuthConfig
+
+	_, err := jwt.ParseWithClaims(token, claims, func(token *jwt.Token) (interface{}, error) {
+		return []byte(configAuth.JWTSecretKey), nil
+	})
+	if err != nil || claims.Type != tokenType {
+		return nil, errors.New("not valid token")
+	}
+
+	if time.Now().Sub(claims.ExpiresAt.Time) > 10*time.Second {
+		return nil, errors.New("token is expired")
+	}
+
+	userId, _ := primitive.ObjectIDFromHex(claims.Subject)
+	condition := map[string]interface{}{
+		"user": userId,
+	}
+	tokenModel, err := authService.TokenRepository.FindOneByCondition(condition)
+	if err != nil || tokenModel == nil {
+		return nil, errors.New("not valid token")
+	}
+
+	return tokenModel, nil
 }

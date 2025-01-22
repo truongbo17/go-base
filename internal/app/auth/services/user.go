@@ -72,3 +72,12 @@ func (userService *UserService) CreateUser(userRequest request.RegisterRequest) 
 		return newUser
 	}
 }
+
+func (userService *UserService) GetUserByEmail(email string) (*model.User, error) {
+	user, err := userService.UserRepository.FindByEmail(email)
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		return nil, nil
+	}
+
+	return user, err
+}

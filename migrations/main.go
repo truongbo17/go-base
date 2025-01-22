@@ -16,6 +16,7 @@ func Migrate() {
 	migrationsList := []*gormigrate.Migration{
 		CreateUsersTable,
 		CreateTokensTable,
+		AlterAddUserToTokensTable,
 	}
 	m := gormigrate.New(db, &gormigrate.Options{
 		TableName:                 config.TableMigrate,
