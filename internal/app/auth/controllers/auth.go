@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
 	"github.com/jinzhu/copier"
@@ -128,6 +127,7 @@ func (userController *UserController) Login(context *gin.Context) {
 	}
 	err = bcrypt.CompareHashAndPassword([]byte(password), []byte(requestBody.Password))
 	if err != nil {
+		res.StatusCode = 1002
 		context.JSON(http.StatusOK, res)
 		return
 	}
@@ -170,6 +170,47 @@ func (userController *UserController) Refresh(context *gin.Context) {
 	var requestBody request.RefreshRequest
 	_ = context.ShouldBindBodyWith(&requestBody, binding.JSON)
 
-	token, err := userController.AuthService.VerifyToken(requestBody.Token, model.TokenTypeRefresh)
-	fmt.Println(token, err)
+	tokenModel, err := userController.AuthService.VerifyToken(requestBody.Token, model.TokenTypeRefresh)
+	res := &response.BaseResponse{
+		Status:     false,
+		StatusCode: 1003,
+		RequestId:  context.GetString("x-request-id"),
+		Data:       nil,
+		Message:    "",
+		Error:      nil,
+	}
+	if err != nil {
+		res.Message = err.Error()
+		context.JSON(http.StatusOK, res)
+		return
+	}
+
+	userController.AuthService.RevokeTokenByUser(tokenModel.User)
+
+	user, err := userController.UserService.GetUserById(tokenModel.User)
+	if err != nil {
+		res.StatusCode = 1004
+		res.Message = err.Error()
+		context.JSON(http.StatusOK, res)
+		return
+	}
+	accessToken, refreshToken, err := userController.AuthService.GenerateAccessTokens(user)
+	if err != nil {
+		panic(err)
+	}
+
+	userInfo := responseAuth.UserInfo{}
+	_ = copier.Copy(&userInfo, &user)
+
+	context.JSON(http.StatusOK, response.BaseResponse{
+		Status:     true,
+		StatusCode: http.StatusOK,
+		RequestId:  context.GetString("x-request-id"),
+		Data: responseAuth.Token{
+			AccessToken:  accessToken.Token,
+			RefreshToken: refreshToken.Token,
+		},
+		Message: "Refresh token successfully.",
+		Error:   nil,
+	})
 }

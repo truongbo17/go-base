@@ -45,6 +45,10 @@ So why I use choose Gin framework?
   go run main.go migrate
 ```
 
+```shell
+  go clean -cache
+```
+
 ### Run the Application
 
 Run with air(hot reload):

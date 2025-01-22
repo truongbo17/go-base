@@ -81,3 +81,9 @@ func (userService *UserService) GetUserByEmail(email string) (*model.User, error
 
 	return user, err
 }
+
+func (userService *UserService) GetUserById(id uint) (*model.User, error) {
+	user := &model.User{}
+	err := userService.UserRepository.FindByID(id, user)
+	return user, err
+}

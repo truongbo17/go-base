@@ -2,13 +2,13 @@ package services
 
 import (
 	"errors"
+	"fmt"
 	"github.com/golang-jwt/jwt/v4"
 	"go-base/config"
 	"go-base/internal/app/auth/model"
 	"go-base/internal/app/auth/repositories"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"golang.org/x/crypto/bcrypt"
-	"strconv"
 	"time"
 )
 
@@ -35,7 +35,7 @@ func (authService AuthService) GenerateAccessTokens(user *model.User) (*model.To
 	configAuth := config.EnvConfig.AuthConfig
 
 	accessExpiresAt := time.Now().Add(time.Duration(configAuth.JWTAccessExpirationMinutes) * time.Minute)
-	refreshExpiresAt := time.Now().Add(time.Duration(configAuth.JWTRefreshExpirationDays) * time.Minute)
+	refreshExpiresAt := time.Now().Add(time.Duration(configAuth.JWTRefreshExpirationDays) * time.Hour * 24)
 
 	accessToken, err := authService.createToken(user, model.TokenTypeAccess, accessExpiresAt)
 	if err != nil {
@@ -57,7 +57,7 @@ func (authService AuthService) createToken(user *model.User, tokenType string, e
 		RegisteredClaims: jwt.RegisteredClaims{
 			IssuedAt:  jwt.NewNumericDate(time.Now()),
 			ExpiresAt: jwt.NewNumericDate(expiresAt),
-			Subject:   strconv.Itoa(int(user.ID)),
+			Subject:   fmt.Sprintf("%v", user.ID),
 		},
 	}
 
@@ -83,7 +83,7 @@ func (authService AuthService) createToken(user *model.User, tokenType string, e
 	return tokenModel, nil
 }
 
-func (authService AuthService) VerifyToken(token string, tokenType string) (any, error) {
+func (authService AuthService) VerifyToken(token string, tokenType string) (*model.Token, error) {
 	claims := &model.UserClaims{}
 	configAuth := config.EnvConfig.AuthConfig
 
@@ -91,7 +91,7 @@ func (authService AuthService) VerifyToken(token string, tokenType string) (any,
 		return []byte(configAuth.JWTSecretKey), nil
 	})
 	if err != nil || claims.Type != tokenType {
-		return nil, errors.New("not valid token")
+		return nil, errors.New("not valid token parse")
 	}
 
 	if time.Now().Sub(claims.ExpiresAt.Time) > 10*time.Second {
@@ -108,4 +108,24 @@ func (authService AuthService) VerifyToken(token string, tokenType string) (any,
 	}
 
 	return tokenModel, nil
+}
+
+func (authService AuthService) DeleteTokenByUser(user uint) error {
+	condition := map[string]interface{}{
+		"user": user,
+	}
+	return authService.TokenRepository.DeleteByCondition(condition)
+}
+
+func (authService AuthService) RevokeTokenByUser(user uint) {
+	condition := map[string]interface{}{
+		"user": user,
+	}
+	update := map[string]interface{}{
+		"expires_at": time.Now().Add(-3 * time.Minute),
+	}
+	err := authService.TokenRepository.UpdateByCondition(condition, update)
+	if err != nil {
+		panic(err)
+	}
 }

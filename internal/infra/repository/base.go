@@ -50,3 +50,23 @@ func (r *BaseRepository[T]) FindOneByCondition(condition interface{}, args ...in
 	}
 	return &entity, nil
 }
+
+func (r *BaseRepository[T]) DeleteByCondition(condition interface{}, args ...interface{}) error {
+	var entity T
+	result := r.DB.Where(condition, args...).Delete(&entity)
+	if result.Error != nil {
+		return result.Error
+	}
+	return nil
+}
+
+func (r *BaseRepository[T]) UpdateByCondition(condition interface{}, updates interface{}, args ...interface{}) error {
+	var entity *T
+
+	result := r.DB.Model(&entity).Where(condition, args...).Updates(updates)
+
+	if result.Error != nil {
+		return result.Error
+	}
+	return nil
+}
