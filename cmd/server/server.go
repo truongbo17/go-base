@@ -51,7 +51,7 @@ func start() {
 
 	database.ConnectDatabase(&EnvConfig.DatabaseConnection)
 
-	routes.Init()
+	routes.Init(appEnv)
 	r := routes.Router
 
 	server := &http.Server{

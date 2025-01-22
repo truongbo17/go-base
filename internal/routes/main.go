@@ -2,13 +2,14 @@ package routes
 
 import (
 	"github.com/gin-gonic/gin"
+	"go-base/config"
 	"go-base/internal/app/auth/routers"
 	"go-base/internal/middlewares"
 )
 
 var Router *gin.Engine
 
-func Init() {
+func Init(appEnv string) {
 	Router = gin.Default()
 
 	Router.Use(middlewares.RequestID())
@@ -20,5 +21,7 @@ func Init() {
 
 	routers.LoadAuthModuleRouter(Router)
 
-	LoadSwaggerRouter(Router)
+	if appEnv == config.DebugMode {
+		LoadSwaggerRouter(Router)
+	}
 }
