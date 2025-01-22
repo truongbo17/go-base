@@ -48,7 +48,7 @@ func ErrorHandle() gin.HandlerFunc {
 
 		status := context.Writer.Status()
 		if status >= 400 {
-			context.JSON(status, response.BaseResponse{
+			context.JSON(status, &response.BaseResponse{
 				Status:     false,
 				StatusCode: status,
 				RequestId:  requestId,
@@ -60,7 +60,7 @@ func ErrorHandle() gin.HandlerFunc {
 		}
 
 		if len(context.Errors) > 0 {
-			context.JSON(http.StatusBadRequest, response.BaseResponse{
+			context.JSON(http.StatusBadRequest, &response.BaseResponse{
 				Status:     false,
 				StatusCode: http.StatusBadRequest,
 				RequestId:  requestId,

@@ -12,6 +12,7 @@ type Config struct {
 	CorsConfig         `mapstructure:",squash"`
 	DatabaseConnection `mapstructure:",squash"`
 	CacheConfig        `mapstructure:",squash"`
+	AuthConfig         `mapstructure:",squash"`
 }
 
 const (
@@ -37,12 +38,12 @@ func (config *Config) validate() error {
 		// Cache
 		validation.Field(&config.CacheConfig.CacheStore, validation.In(CacheStoreLocal, CacheStoreRedis)),
 
-		//validation.Field(&config.UseRedis, validation.In(true, false)),
-		//validation.Field(&config.RedisDefaultAddr),
-		//
-		//validation.Field(&config.JWTSecretKey, validation.Required),
-		//validation.Field(&config.JWTAccessExpirationMinutes, validation.Required),
-		//validation.Field(&config.JWTRefreshExpirationDays, validation.Required),
+		// Redis
+		validation.Field(&config.CacheConfig.RedisPort, is.Port),
+		validation.Field(&config.CacheConfig.RedisHost, is.Host),
+
+		// Auth
+		validation.Field(&config.AuthConfig.JWTSecretKey, validation.Required),
 	)
 }
 
@@ -56,6 +57,9 @@ func setupConfig() *Config {
 	viper.SetDefault("APP_PORT", "8000")
 	viper.SetDefault("CORS_ALLOW_ORIGIN", "*")
 	viper.SetDefault("CACHE_STORE", "local")
+
+	viper.SetDefault("JWT_ACCESS_EXPIRATION_MINUTES", 120)
+	viper.SetDefault("JWT_REFRESH_EXPIRATION_DAYS", 7)
 
 	viper.AutomaticEnv()
 

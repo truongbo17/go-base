@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
 	"go-base/internal/app/auth/repositories"
+	responseAuth "go-base/internal/app/auth/response"
 	"go-base/internal/app/auth/services"
 	"go-base/internal/app/auth/validators"
 	"go-base/internal/response"
@@ -12,13 +13,16 @@ import (
 
 type UserController struct {
 	UserService *services.UserService
+	AuthService *services.AuthService
 }
 
 func NewUserController() *UserController {
 	userRepository := repositories.NewUserRepository()
 	userService := services.NewUserService(userRepository)
+	authService := services.NewAuthService()
 	return &UserController{
 		UserService: userService,
+		AuthService: authService,
 	}
 }
 
@@ -48,6 +52,31 @@ func (userController *UserController) Register(context *gin.Context) {
 		})
 		return
 	}
+
+	decryptPassword, err := userController.AuthService.GeneratePassword(requestBody.Password)
+	if err != nil {
+		panic(err)
+	}
+	requestBody.Password = string(decryptPassword)
+
+	user := userController.UserService.CreateUser(requestBody)
+
+	accessToken, refreshToken, err := userController.AuthService.GenerateAccessTokens(user)
+	if err != nil {
+		panic(err)
+	}
+
+	context.JSON(http.StatusOK, response.BaseResponse{
+		Status:     true,
+		StatusCode: http.StatusOK,
+		RequestId:  context.GetString("x-request-id"),
+		Data: responseAuth.UserRegisterResponse{
+			AccessToken:  accessToken,
+			RefreshToken: refreshToken,
+		},
+		Message: "Success",
+		Error:   nil,
+	})
 }
 
 // Login godoc

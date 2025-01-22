@@ -2,7 +2,9 @@ package services
 
 import (
 	"errors"
+	"go-base/internal/app/auth/model"
 	"go-base/internal/app/auth/repositories"
+	"go-base/internal/app/auth/validators"
 	"go-base/internal/infra/cache"
 	"gorm.io/gorm"
 	"strconv"
@@ -54,4 +56,17 @@ func (userService *UserService) CheckExistEmail(email string) bool {
 	isExistCheck, _ := strconv.ParseBool(isExist.(string))
 
 	return isExistCheck
+}
+
+func (userService *UserService) CreateUser(userRequest validators.RegisterRequest) *model.User {
+	newUser := &model.User{
+		Name:  userRequest.Name,
+		Email: userRequest.Email,
+	}
+	err := userService.UserRepository.Create(newUser)
+	if err != nil {
+		panic(err)
+	} else {
+		return newUser
+	}
 }

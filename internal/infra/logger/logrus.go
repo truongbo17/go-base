@@ -20,7 +20,7 @@ func InitLogrusLogger() *logrus.Logger {
 	})
 
 	logFile := &lumberjack.Logger{
-		Filename: fmt.Sprintf("logs/%s.log", currentDate.Format(time.DateOnly)),
+		Filename: fmt.Sprintf("storage/logs/%s.log", currentDate.Format(time.DateOnly)),
 		MaxSize:  10,
 		Compress: false,
 	}
