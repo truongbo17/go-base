@@ -17,7 +17,7 @@ func Init(appEnv string) {
 	Router.Use(middlewares.RequestLogger())
 	Router.Use(middlewares.ErrorHandle())
 	Router.Use(middlewares.Cors())
-	Router.Use(middlewares.RateLimit())
+	Router.Use(middlewares.RateGlobalLimit())
 
 	LoadPublicRouter(Router)
 

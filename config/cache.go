@@ -1,8 +1,9 @@
 package config
 
 const (
-	CacheStoreLocal string = "local"
-	CacheStoreRedis string = "redis"
+	CacheStoreLocal   string = "local"
+	CacheStoreRedis   string = "redis"
+	CacheKeyRateLimit string = "router_rate_limit"
 )
 
 type CacheConfig struct {

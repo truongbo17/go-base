@@ -2,6 +2,7 @@ package routes
 
 import (
 	"github.com/gin-gonic/gin"
+	"go-base/internal/middlewares"
 )
 
 // LoadPublicRouter sets up public routes.
@@ -15,6 +16,7 @@ import (
 // @Router /ping [get]
 func LoadPublicRouter(r *gin.Engine) *gin.RouterGroup {
 	public := r.Group("/")
+	public.Use(middlewares.RateLimitPublic())
 	{
 		public.GET("ping", func(context *gin.Context) {
 			context.String(200, "pong: "+context.GetString("x-request-id"))
