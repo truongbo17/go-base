@@ -2,11 +2,10 @@ package middlewares
 
 import (
 	"github.com/gin-gonic/gin"
-	libredis "github.com/redis/go-redis/v9"
 	"github.com/ulule/limiter/v3"
 	mgin "github.com/ulule/limiter/v3/drivers/middleware/gin"
 	"github.com/ulule/limiter/v3/drivers/store/redis"
-	"log"
+	redis2 "go-base/internal/infra/redis"
 	"net/http"
 	"strconv"
 	"time"
@@ -30,11 +29,7 @@ func RateLimit() gin.HandlerFunc {
 		Limit:  2,
 	}
 
-	option, err := libredis.ParseURL("redis://localhost:6379/0")
-	if err != nil {
-		log.Fatal(err)
-	}
-	client := libredis.NewClient(option)
+	client := redis2.ClientRedis
 
 	store, err := redis.NewStoreWithOptions(client, limiter.StoreOptions{
 		Prefix: "your_own_prefix",
