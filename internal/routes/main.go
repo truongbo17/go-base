@@ -11,11 +11,13 @@ var Router *gin.Engine
 
 func Init(appEnv string) {
 	Router = gin.Default()
+	Router.ForwardedByClientIP = true
 
 	Router.Use(middlewares.RequestID())
 	Router.Use(middlewares.RequestLogger())
 	Router.Use(middlewares.ErrorHandle())
 	Router.Use(middlewares.Cors())
+	Router.Use(middlewares.RateLimit())
 
 	LoadPublicRouter(Router)
 
