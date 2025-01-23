@@ -7,6 +7,7 @@ import (
 	"github.com/spf13/cobra"
 	"go-base/config"
 	_ "go-base/docs"
+	"go-base/internal/infra/asynq"
 	"go-base/internal/infra/cache"
 	"go-base/internal/infra/database"
 	"go-base/internal/infra/limiter"
@@ -59,6 +60,8 @@ func start() {
 
 	if storeCache == config.CacheStoreRedis {
 		schedule.Init()
+
+		asynq.InitClient()
 	}
 
 	routes.Init(appEnv)

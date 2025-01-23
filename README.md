@@ -90,7 +90,7 @@ Build
 * Config ✅
 * Command / Console ✅
 * Schedule / Cron ✅
-* Queue/Job
+* Queue/Job ✅
 * Swagger ✅
 * Logger ✅
 * Database (DocumentDB(MongoDB), Relation DB(MYSQL)) ✅
