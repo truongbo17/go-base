@@ -102,7 +102,7 @@ Build
 * Cache (local, redis) ✅
 * Redis ✅
 * GraphQL
-* Http call service
+* Http call service ✅
 * Middleware ✅
 * Push notify to telegram
 * Migration tool ✅
