@@ -12,10 +12,29 @@ func LoadAuthModuleRouter(r *gin.Engine) *gin.RouterGroup {
 
 	groupAuth := r.Group("/auth")
 	{
-		groupAuth.POST("/login", request.LoginValidator(), userController.Login)
-		groupAuth.POST("/register", request.RegisterValidator(), userController.Register)
-		groupAuth.POST("/refresh", request.RefreshValidator(), userController.Refresh)
-		groupAuth.GET("/me", middlewares.JWTMiddleware(), userController.Me)
+		groupAuth.POST(
+			"/login",
+			request.LoginValidator(),
+			middlewares.RateLoginPublic(),
+			userController.Login,
+		)
+		groupAuth.POST(
+			"/register",
+			request.RegisterValidator(),
+			middlewares.RateRegisterPublic(),
+			userController.Register,
+		)
+		groupAuth.POST(
+			"/refresh",
+			request.RefreshValidator(),
+			middlewares.RateRefreshPublic(),
+			userController.Refresh,
+		)
+		groupAuth.GET(
+			"/me",
+			middlewares.JWTMiddleware(),
+			userController.Me,
+		)
 	}
 	return groupAuth
 }

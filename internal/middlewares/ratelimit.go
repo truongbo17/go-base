@@ -19,7 +19,34 @@ func RateGlobalLimit() gin.HandlerFunc {
 func RateLimitPublic() gin.HandlerFunc {
 	rate := limiter.Rate{
 		Period: 1 * time.Minute,
-		Limit:  1000,
+		Limit:  100,
+	}
+
+	return limiter2.Limit(rate)
+}
+
+func RateLoginPublic() gin.HandlerFunc {
+	rate := limiter.Rate{
+		Period: 1 * time.Hour,
+		Limit:  3,
+	}
+
+	return limiter2.Limit(rate)
+}
+
+func RateRegisterPublic() gin.HandlerFunc {
+	rate := limiter.Rate{
+		Period: 1 * time.Hour * 24 * 7,
+		Limit:  3,
+	}
+
+	return limiter2.Limit(rate)
+}
+
+func RateRefreshPublic() gin.HandlerFunc {
+	rate := limiter.Rate{
+		Period: 1 * time.Hour * 24 * 7,
+		Limit:  1,
 	}
 
 	return limiter2.Limit(rate)
