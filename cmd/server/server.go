@@ -45,6 +45,8 @@ func start() {
 	logger.Init()
 	log := logger.LogrusLogger
 
+	log.Infoln("Success init config")
+
 	redis.ConnectRedis()
 
 	storeCache := EnvConfig.CacheConfig.CacheStore

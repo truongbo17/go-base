@@ -3,6 +3,7 @@ package logger
 import (
 	"fmt"
 	"github.com/sirupsen/logrus"
+	"go-base/config"
 	"gopkg.in/natefinch/lumberjack.v2"
 	"io"
 	"os"
@@ -20,13 +21,15 @@ func InitLogrusLogger() *logrus.Logger {
 	})
 
 	logFile := &lumberjack.Logger{
-		Filename: fmt.Sprintf("storage/logs/%s.log", currentDate.Format(time.DateOnly)),
+		Filename: fmt.Sprintf(config.PathLog, currentDate.Format(time.DateOnly)),
 		MaxSize:  10,
 		Compress: false,
 	}
 
 	writers := []io.Writer{logFile, os.Stdout}
 	logger.SetOutput(io.MultiWriter(writers...))
+
+	logger.Infoln("Success init logger with Logrus")
 
 	return logger
 }
