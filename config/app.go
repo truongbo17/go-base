@@ -1,7 +1,8 @@
 package config
 
 const (
-	PathLog = "storage/logs/%s.log"
+	PathLog                           = "storage/logs/%s.log"
+	DefaultScheduleLockRedisRetry int = 1
 )
 
 type AppConfig struct {

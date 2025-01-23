@@ -12,6 +12,7 @@ import (
 	"go-base/internal/infra/limiter"
 	"go-base/internal/infra/logger"
 	"go-base/internal/infra/redis"
+	"go-base/internal/infra/schedule"
 	"go-base/internal/routes"
 	"net/http"
 	"os"
@@ -55,6 +56,10 @@ func start() {
 	limiter.InitLimiterStore(storeCache)
 
 	database.ConnectDatabase(&EnvConfig.DatabaseConnection)
+
+	if storeCache == config.CacheStoreRedis {
+		schedule.Init()
+	}
 
 	routes.Init(appEnv)
 	r := routes.Router

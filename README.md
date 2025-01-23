@@ -89,15 +89,13 @@ Build
 * I18N
 * Config ✅
 * Command / Console ✅
-* Schedule
-* Queue
+* Schedule / Cron ✅
+* Queue/Job
 * Swagger ✅
-* View
 * Logger ✅
 * Database (DocumentDB(MongoDB), Relation DB(MYSQL)) ✅
 * Mail
-* File upload
-* Upload file (local, s3)
+* File upload (local, s3)
 * Kafka (producer, consumer)
 * Authentication (JWT access token, refresh token) ✅
 * Google auth ✅
@@ -106,11 +104,9 @@ Build
 * GraphQL
 * Http call service
 * Middleware ✅
-* Filter
 * Push notify to telegram
-* Worker
 * Migration tool ✅
-...
+* ...
 ----
 
 ## Overview

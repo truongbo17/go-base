@@ -42,7 +42,7 @@ func ConnectMySQL(configDB *config.DatabaseRelation) *gorm.DB {
 
 	DB = db
 
-	logApp.Infoln("Successfully connected to Mysql")
+	logApp.Infoln("Success connected to Mysql")
 
 	return db
 }
