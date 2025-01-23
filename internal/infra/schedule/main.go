@@ -23,9 +23,11 @@ func Init() {
 	}
 	logApp := logger.LogrusLogger
 
-	_, err = s.NewJob(gocron.DurationJob(500*time.Millisecond), gocron.NewTask(func() {
-		logApp.Infoln("Success")
-	}))
+	_, err = s.NewJob(
+		gocron.DailyJob(1, gocron.NewAtTimes(gocron.NewAtTime(11, 31, 0))),
+		gocron.NewTask(func(time string) {
+			logApp.Infoln("Success" + time)
+		}, time.Now().Format(time.DateTime)))
 	if err != nil {
 		logApp.Errorln(err)
 	}
