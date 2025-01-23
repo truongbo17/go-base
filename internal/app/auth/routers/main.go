@@ -19,6 +19,12 @@ func LoadAuthModuleRouter(r *gin.Engine) *gin.RouterGroup {
 			userController.Login,
 		)
 		groupAuth.POST(
+			"/login/google",
+			request.LoginValidator(),
+			middlewares.RateLoginPublic(),
+			userController.LoginGoogle,
+		)
+		groupAuth.POST(
 			"/register",
 			request.RegisterValidator(),
 			middlewares.RateRegisterPublic(),

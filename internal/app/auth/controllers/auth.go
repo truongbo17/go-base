@@ -1,9 +1,11 @@
 package controllers
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
 	"github.com/jinzhu/copier"
+	"go-base/config"
 	"go-base/internal/app/auth/model"
 	"go-base/internal/app/auth/repositories"
 	"go-base/internal/app/auth/request"
@@ -12,6 +14,7 @@ import (
 	"go-base/internal/response"
 	"golang.org/x/crypto/bcrypt"
 	"net/http"
+	"strings"
 )
 
 type UserController struct {
@@ -186,20 +189,18 @@ func (userController *UserController) Login(context *gin.Context) {
 	userInfo := responseAuth.UserInfo{}
 	_ = copier.Copy(&userInfo, &user)
 
-	context.JSON(http.StatusOK, response.BaseResponse{
-		Status:     true,
-		StatusCode: http.StatusOK,
-		RequestId:  context.GetString("x-request-id"),
-		Data: responseAuth.UserLoginResponse{
-			Token: responseAuth.Token{
-				AccessToken:  accessToken.Token,
-				RefreshToken: refreshToken.Token,
-			},
-			User: userInfo,
+	res.Status = true
+	res.StatusCode = http.StatusOK
+	res.Message = "Login user successfully."
+	res.Data = responseAuth.UserLoginResponse{
+		Token: responseAuth.Token{
+			AccessToken:  accessToken.Token,
+			RefreshToken: refreshToken.Token,
 		},
-		Message: "Login user successfully.",
-		Error:   nil,
-	})
+		User: userInfo,
+	}
+	res.Error = nil
+	context.JSON(http.StatusOK, res)
 }
 
 // Refresh godoc
@@ -265,4 +266,69 @@ func (userController *UserController) Refresh(context *gin.Context) {
 		Message: "Refresh token successfully.",
 		Error:   nil,
 	})
+}
+
+// LoginGoogle godoc
+// @Summary      LoginGoogle
+// @Description  login a user by google email
+// @Tags         auth
+// @Accept       json
+// @Produce      json
+// @Success      200  {object}  response.BaseResponse
+// @Failure      400  {object}  response.BaseResponse
+// @Router       /auth/login/google [post]
+func (userController *UserController) LoginGoogle(context *gin.Context) {
+	token := context.GetHeader(config.HeaderAuth)
+	if token == "" {
+		context.AbortWithStatus(http.StatusUnauthorized)
+		return
+	}
+	token = strings.Replace(token, config.TokenType, "", 1)
+	token = strings.TrimSpace(token)
+	email, err := userController.AuthService.VerifyTokenGoogle(token)
+	res := &response.BaseResponse{
+		Status:     false,
+		StatusCode: 1010,
+		RequestId:  context.GetString("x-request-id"),
+		Data:       nil,
+		Message:    "Verify google token failed.",
+		Error:      nil,
+	}
+	if err != nil {
+		context.JSON(http.StatusOK, res)
+		return
+	}
+
+	user, err := userController.UserService.GetUserByEmail(fmt.Sprintf("%t", email))
+	if err != nil {
+		panic(err)
+	}
+
+	if user == nil {
+		res.StatusCode = 1010
+		res.Message = "User not found"
+		context.JSON(http.StatusOK, res)
+		return
+	}
+
+	accessToken, refreshToken, err := userController.AuthService.GenerateAccessTokens(user)
+	if err != nil {
+		panic(err)
+	}
+
+	userInfo := responseAuth.UserInfo{}
+	_ = copier.Copy(&userInfo, &user)
+
+	res.Status = true
+	res.StatusCode = http.StatusOK
+	res.Message = "Login google user successfully."
+	res.Data = responseAuth.UserLoginResponse{
+		Token: responseAuth.Token{
+			AccessToken:  accessToken.Token,
+			RefreshToken: refreshToken.Token,
+		},
+		User: userInfo,
+	}
+	res.Error = nil
+	context.JSON(http.StatusOK, res)
 }

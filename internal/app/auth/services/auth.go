@@ -1,6 +1,7 @@
 package services
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"github.com/golang-jwt/jwt/v4"
@@ -8,6 +9,7 @@ import (
 	"go-base/internal/app/auth/model"
 	"go-base/internal/app/auth/repositories"
 	"golang.org/x/crypto/bcrypt"
+	"google.golang.org/api/idtoken"
 	"time"
 )
 
@@ -126,4 +128,21 @@ func (authService AuthService) RevokeTokenByUser(user uint) {
 	if err != nil {
 		panic(err)
 	}
+}
+
+func (authService AuthService) VerifyTokenGoogle(token string) (interface{}, error) {
+	configAuth := config.EnvConfig.AuthConfig
+
+	tokenValidator, err := idtoken.NewValidator(context.Background())
+	if err != nil {
+		return nil, err
+	}
+	payload, err := tokenValidator.Validate(context.Background(), token, configAuth.GoogleAuthClientID)
+	if err != nil {
+		return nil, err
+	}
+
+	claim := payload.Claims
+
+	return claim["email"], nil
 }
