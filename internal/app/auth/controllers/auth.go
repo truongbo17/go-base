@@ -126,7 +126,6 @@ func (userController *UserController) Register(context *gin.Context) {
 	userInfo := responseAuth.UserInfo{}
 	_ = copier.Copy(&userInfo, &user)
 
-	// push job send email to queue
 	jobSendMail, err := jobs.SendMailRegisterTask(user.ID, user.Email)
 	if err != nil {
 		logApp.Errorf("could not create task: %v", err)

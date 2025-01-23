@@ -4,12 +4,12 @@ import (
 	"fmt"
 	"github.com/hibiken/asynq"
 	"go-base/config"
+	"go-base/internal/app/auth/jobs"
 	"go-base/internal/infra/logger"
 	"log"
 )
 
 var ClientWorker *asynq.Client
-var ServerWorker *asynq.Server
 
 func InitClient() {
 	EnvConfig := config.EnvConfig
@@ -54,9 +54,10 @@ func InitServer() {
 		},
 	)
 
-	ServerWorker = srv
-
 	mux := asynq.NewServeMux()
+
+	mux.HandleFunc(jobs.TypeEmailRegister, jobs.HandleSendMailRegister)
+
 	if err := srv.Run(mux); err != nil {
 		log.Fatalf("could not run server: %v", err)
 	}
