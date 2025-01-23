@@ -30,6 +30,20 @@ func NewUserController() *UserController {
 	}
 }
 
+// Me godoc
+// @Summary      Me
+// @Description  Get me
+// @Tags         auth
+// @Accept       json
+// @Produce      json
+// @Success      200  {object}  response.UserInfo
+// @Failure      400  {object}  response.BaseResponse
+// @Router       /auth/me [get]
+// @Security	 Authorization
+func (userController *UserController) Me(context *gin.Context) {
+
+}
+
 // Register godoc
 // @Summary      Register
 // @Description  registers a user

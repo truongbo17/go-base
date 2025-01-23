@@ -20,7 +20,7 @@ clean:
 .PHONY: swagger
 # swagger docs generation
 swagger:
-	swag init -g main.go -o api/swagger
+	swag init
 
 .PHONY: tidy
 # tidy the go modules

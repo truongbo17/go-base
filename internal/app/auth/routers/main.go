@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"go-base/internal/app/auth/controllers"
 	"go-base/internal/app/auth/request"
+	"go-base/internal/middlewares"
 )
 
 func LoadAuthModuleRouter(r *gin.Engine) *gin.RouterGroup {
@@ -14,6 +15,7 @@ func LoadAuthModuleRouter(r *gin.Engine) *gin.RouterGroup {
 		groupAuth.POST("/login", request.LoginValidator(), userController.Login)
 		groupAuth.POST("/register", request.RegisterValidator(), userController.Register)
 		groupAuth.POST("/refresh", request.RefreshValidator(), userController.Refresh)
+		groupAuth.GET("/me", middlewares.JWTMiddleware(), userController.Me)
 	}
 	return groupAuth
 }

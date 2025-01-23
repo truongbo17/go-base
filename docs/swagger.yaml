@@ -96,6 +96,27 @@ paths:
       summary: Login
       tags:
       - auth
+  /auth/me:
+    get:
+      consumes:
+      - application/json
+      description: Get me
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.UserInfo'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.BaseResponse'
+      security:
+      - Authorization: []
+      summary: Me
+      tags:
+      - auth
   /auth/refresh:
     post:
       consumes:
