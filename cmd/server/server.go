@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/hibiken/asynq"
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 	"go-base/config"
@@ -83,6 +84,14 @@ func start() {
 	}
 
 	log.Printf("Server is now listening at port: %s. Good luck!", EnvConfig.AppConfig.Port)
+
+	rdb := worker.ClientWorker
+	defer func(rdb *asynq.Client) {
+		err := rdb.Close()
+		if err != nil {
+			panic(err)
+		}
+	}(rdb)
 
 	go func() {
 		if err := server.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {

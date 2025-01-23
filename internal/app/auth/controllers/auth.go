@@ -133,8 +133,9 @@ func (userController *UserController) Register(context *gin.Context) {
 	enqueue, err := worker.ClientWorker.Enqueue(jobSendMail)
 	if err != nil {
 		logApp.Errorln("Enqueue error:", err)
+	} else {
+		logApp.Infof("enqueued task: id=%s queue=%s", enqueue.ID, enqueue.Queue)
 	}
-	logApp.Infof("enqueued task: id=%s queue=%s", enqueue.ID, enqueue.Queue)
 
 	context.JSON(http.StatusOK, response.BaseResponse{
 		Status:     true,

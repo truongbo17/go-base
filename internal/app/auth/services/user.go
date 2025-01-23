@@ -32,9 +32,11 @@ func (userService *UserService) CheckExistEmail(email string) bool {
 	if err != nil {
 		panic(err)
 	}
-	if isExist == nil {
+	isExistUser, _ := strconv.ParseBool(fmt.Sprintf("%t", isExist))
+	if !isExistUser {
 		user, err := userService.UserRepository.FindByEmail(email)
 		if errors.Is(err, gorm.ErrRecordNotFound) {
+			isExistUser = false
 			err = cache.Cache.Set(CacheKeyCheckExistEmail, false, time.Hour*24*365)
 			if err != nil {
 				panic(err)
@@ -46,6 +48,7 @@ func (userService *UserService) CheckExistEmail(email string) bool {
 			panic(err)
 		}
 
+		isExistUser = user != nil
 		err = cache.Cache.Set(CacheKeyCheckExistEmail, user != nil, time.Hour*24*365)
 		if err != nil {
 			panic(err)
@@ -54,9 +57,7 @@ func (userService *UserService) CheckExistEmail(email string) bool {
 		return user != nil
 	}
 
-	isExistCheck, _ := strconv.ParseBool(fmt.Sprintf("%t", isExist))
-
-	return isExistCheck
+	return isExistUser
 }
 
 func (userService *UserService) CreateUser(userRequest request.RegisterRequest) *model.User {

@@ -21,12 +21,6 @@ func InitClient() {
 		Username: configRedis.RedisUsername,
 		Password: configRedis.RedisPassword,
 	})
-	defer func(rdb *asynq.Client) {
-		err := rdb.Close()
-		if err != nil {
-			panic(err)
-		}
-	}(rdb)
 
 	ClientWorker = rdb
 
