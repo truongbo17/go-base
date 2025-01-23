@@ -6,7 +6,8 @@ const (
 )
 
 type AppConfig struct {
-	Env  string `mapstructure:"APP_ENV"`
-	Name string `mapstructure:"APP_NAME"`
-	Port string `mapstructure:"APP_PORT"`
+	Env      string `mapstructure:"APP_ENV"`
+	Name     string `mapstructure:"APP_NAME"`
+	Port     string `mapstructure:"APP_PORT"`
+	IsWorker bool   `mapstructure:"APP_WORKER"`
 }

@@ -2,6 +2,7 @@ package server
 
 import (
 	"context"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
@@ -18,6 +19,7 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	"strconv"
 	"syscall"
 	"time"
 )
@@ -58,15 +60,19 @@ func start() {
 
 	database.ConnectDatabase(&EnvConfig.DatabaseConnection)
 
+	routes.Init(appEnv)
+	r := routes.Router
+
 	if storeCache == config.CacheStoreRedis {
 		schedule.Init()
 
-		asynq.InitClient()
-		asynq.InitServer()
+		isWorker, _ := strconv.ParseBool(fmt.Sprintf("%t", EnvConfig.IsWorker))
+		if isWorker {
+			asynq.InitServer()
+		} else {
+			asynq.InitClient()
+		}
 	}
-
-	routes.Init(appEnv)
-	r := routes.Router
 
 	server := &http.Server{
 		Addr:         ":" + EnvConfig.AppConfig.Port,

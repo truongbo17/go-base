@@ -27,6 +27,7 @@ func (config *Config) validate() error {
 		// App
 		validation.Field(&config.AppConfig.Port, is.Port),
 		validation.Field(&config.AppConfig.Env, validation.In(DebugMode, ReleaseMode)),
+		validation.Field(&config.AppConfig.IsWorker, validation.In(true, false)),
 
 		// CORS
 		validation.Field(&config.CorsConfig.AllowOrigin),
