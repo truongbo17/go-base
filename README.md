@@ -104,7 +104,7 @@ Build
 * GraphQL
 * Http call service ✅
 * Middleware ✅
-* Push notify to telegram
+* Push notify to telegram ✅
 * Migration tool ✅
 * ...
 ----

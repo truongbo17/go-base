@@ -13,6 +13,7 @@ type Config struct {
 	DatabaseConnection `mapstructure:",squash"`
 	CacheConfig        `mapstructure:",squash"`
 	AuthConfig         `mapstructure:",squash"`
+	TelegramConfig     `mapstructure:",squash"`
 }
 
 const (
