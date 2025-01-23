@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
+	"go-base/config"
 	"go-base/internal/infra/logger"
 	"time"
 )
@@ -21,7 +22,7 @@ type RequestLog struct {
 func RequestLogger() gin.HandlerFunc {
 	return func(context *gin.Context) {
 		timeNow := time.Now()
-		requestId := context.GetString("x-request-id")
+		requestId := context.GetString(config.HeaderRequestID)
 		clientIp := context.ClientIP()
 		userAgent := context.Request.UserAgent()
 		method := context.Request.Method

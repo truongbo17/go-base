@@ -1,29 +1,35 @@
-package asynq
+package worker
 
 import (
 	"fmt"
-	asynqPackage "github.com/hibiken/asynq"
+	"github.com/hibiken/asynq"
 	"go-base/config"
 	"go-base/internal/infra/logger"
 	"log"
 )
+
+var ClientWorker *asynq.Client
+var ServerWorker *asynq.Server
 
 func InitClient() {
 	EnvConfig := config.EnvConfig
 	configRedis := EnvConfig.CacheConfig
 	logApp := logger.LogrusLogger
 
-	rdb := asynqPackage.NewClient(asynqPackage.RedisClientOpt{
+	rdb := asynq.NewClient(asynq.RedisClientOpt{
 		Addr:     fmt.Sprintf("%s:%s", configRedis.RedisHost, configRedis.RedisPort),
 		Username: configRedis.RedisUsername,
 		Password: configRedis.RedisPassword,
 	})
-	defer func(rdb *asynqPackage.Client) {
+	defer func(rdb *asynq.Client) {
 		err := rdb.Close()
 		if err != nil {
 			panic(err)
 		}
 	}(rdb)
+
+	ClientWorker = rdb
+
 	logApp.Infoln("Success init client asynq queue.")
 }
 
@@ -32,13 +38,13 @@ func InitServer() {
 	configRedis := EnvConfig.CacheConfig
 	logApp := logger.LogrusLogger
 
-	srv := asynqPackage.NewServer(
-		asynqPackage.RedisClientOpt{
+	srv := asynq.NewServer(
+		asynq.RedisClientOpt{
 			Addr:     fmt.Sprintf("%s:%s", configRedis.RedisHost, configRedis.RedisPort),
 			Username: configRedis.RedisUsername,
 			Password: configRedis.RedisPassword,
 		},
-		asynqPackage.Config{
+		asynq.Config{
 			Concurrency: 10,
 			Queues: map[string]int{
 				"critical": 6,
@@ -47,7 +53,10 @@ func InitServer() {
 			},
 		},
 	)
-	mux := asynqPackage.NewServeMux()
+
+	ServerWorker = srv
+
+	mux := asynq.NewServeMux()
 	if err := srv.Run(mux); err != nil {
 		log.Fatalf("could not run server: %v", err)
 	}

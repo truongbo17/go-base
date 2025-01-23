@@ -96,6 +96,25 @@ paths:
       summary: Login
       tags:
       - auth
+  /auth/login/google:
+    post:
+      consumes:
+      - application/json
+      description: login a user by google email
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.BaseResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.BaseResponse'
+      summary: LoginGoogle
+      tags:
+      - auth
   /auth/me:
     get:
       consumes:

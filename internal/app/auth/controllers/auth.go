@@ -6,11 +6,14 @@ import (
 	"github.com/gin-gonic/gin/binding"
 	"github.com/jinzhu/copier"
 	"go-base/config"
+	"go-base/internal/app/auth/jobs"
 	"go-base/internal/app/auth/model"
 	"go-base/internal/app/auth/repositories"
 	"go-base/internal/app/auth/request"
 	responseAuth "go-base/internal/app/auth/response"
 	"go-base/internal/app/auth/services"
+	"go-base/internal/infra/logger"
+	"go-base/internal/infra/worker"
 	"go-base/internal/response"
 	"golang.org/x/crypto/bcrypt"
 	"net/http"
@@ -48,7 +51,7 @@ func (userController *UserController) Me(context *gin.Context) {
 	user, err := userController.UserService.GetUserById(userId)
 	res := &response.BaseResponse{
 		Status:    false,
-		RequestId: context.GetString("x-request-id"),
+		RequestId: context.GetString(config.HeaderRequestID),
 		Data:      nil,
 		Message:   "",
 		Error:     nil,
@@ -72,7 +75,7 @@ func (userController *UserController) Me(context *gin.Context) {
 	context.JSON(http.StatusOK, response.BaseResponse{
 		Status:     true,
 		StatusCode: http.StatusOK,
-		RequestId:  context.GetString("x-request-id"),
+		RequestId:  context.GetString(config.HeaderRequestID),
 		Data:       userInfo,
 		Message:    "Success.",
 		Error:      nil,
@@ -98,13 +101,14 @@ func (userController *UserController) Register(context *gin.Context) {
 		context.JSON(http.StatusOK, response.BaseResponse{
 			Status:     false,
 			StatusCode: 1000,
-			RequestId:  context.GetString("x-request-id"),
+			RequestId:  context.GetString(config.HeaderRequestID),
 			Data:       nil,
 			Message:    "Email already exist",
 			Error:      nil,
 		})
 		return
 	}
+	logApp := logger.LogrusLogger
 
 	decryptPassword, err := userController.AuthService.GeneratePassword(requestBody.Password)
 	if err != nil {
@@ -122,10 +126,21 @@ func (userController *UserController) Register(context *gin.Context) {
 	userInfo := responseAuth.UserInfo{}
 	_ = copier.Copy(&userInfo, &user)
 
+	// push job send email to queue
+	jobSendMail, err := jobs.SendMailRegisterTask(user.ID, user.Email)
+	if err != nil {
+		logApp.Errorf("could not create task: %v", err)
+	}
+	enqueue, err := worker.ClientWorker.Enqueue(jobSendMail)
+	if err != nil {
+		logApp.Errorln("Enqueue error:", err)
+	}
+	logApp.Infof("enqueued task: id=%s queue=%s", enqueue.ID, enqueue.Queue)
+
 	context.JSON(http.StatusOK, response.BaseResponse{
 		Status:     true,
 		StatusCode: http.StatusOK,
-		RequestId:  context.GetString("x-request-id"),
+		RequestId:  context.GetString(config.HeaderRequestID),
 		Data: responseAuth.UserRegisterResponse{
 			Token: responseAuth.Token{
 				AccessToken:  accessToken.Token,
@@ -160,7 +175,7 @@ func (userController *UserController) Login(context *gin.Context) {
 	res := &response.BaseResponse{
 		Status:     false,
 		StatusCode: 1001,
-		RequestId:  context.GetString("x-request-id"),
+		RequestId:  context.GetString(config.HeaderRequestID),
 		Data:       nil,
 		Message:    "Email or password is wrong",
 		Error:      nil,
@@ -221,7 +236,7 @@ func (userController *UserController) Refresh(context *gin.Context) {
 	res := &response.BaseResponse{
 		Status:     false,
 		StatusCode: 1003,
-		RequestId:  context.GetString("x-request-id"),
+		RequestId:  context.GetString(config.HeaderRequestID),
 		Data:       nil,
 		Message:    "",
 		Error:      nil,
@@ -258,7 +273,7 @@ func (userController *UserController) Refresh(context *gin.Context) {
 	context.JSON(http.StatusOK, response.BaseResponse{
 		Status:     true,
 		StatusCode: http.StatusOK,
-		RequestId:  context.GetString("x-request-id"),
+		RequestId:  context.GetString(config.HeaderRequestID),
 		Data: responseAuth.Token{
 			AccessToken:  accessToken.Token,
 			RefreshToken: refreshToken.Token,
@@ -289,7 +304,7 @@ func (userController *UserController) LoginGoogle(context *gin.Context) {
 	res := &response.BaseResponse{
 		Status:     false,
 		StatusCode: 1010,
-		RequestId:  context.GetString("x-request-id"),
+		RequestId:  context.GetString(config.HeaderRequestID),
 		Data:       nil,
 		Message:    "Verify google token failed.",
 		Error:      nil,

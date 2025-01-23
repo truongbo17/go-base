@@ -3,6 +3,7 @@ package config
 const (
 	PathLog                       string = "storage/logs/%s.log"
 	DefaultScheduleLockRedisRetry int    = 1
+	HeaderRequestID               string = "X-Request-ID"
 )
 
 type AppConfig struct {

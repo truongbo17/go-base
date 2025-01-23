@@ -2,6 +2,7 @@ package routes
 
 import (
 	"github.com/gin-gonic/gin"
+	"go-base/config"
 	"go-base/internal/middlewares"
 )
 
@@ -19,7 +20,7 @@ func LoadPublicRouter(r *gin.Engine) *gin.RouterGroup {
 	public.Use(middlewares.RateLimitPublic())
 	{
 		public.GET("ping", func(context *gin.Context) {
-			context.String(200, "pong: "+context.GetString("x-request-id"))
+			context.String(200, "pong: "+context.GetString(config.HeaderRequestID))
 		})
 	}
 	return public

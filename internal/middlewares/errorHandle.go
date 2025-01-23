@@ -3,6 +3,7 @@ package middlewares
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
+	"go-base/config"
 	"go-base/internal/infra/logger"
 	"go-base/internal/response"
 	"go-base/internal/utils"
@@ -18,7 +19,7 @@ type RequestLogStack struct {
 
 func ErrorHandle() gin.HandlerFunc {
 	return func(context *gin.Context) {
-		requestId := context.GetString("x-request-id")
+		requestId := context.GetString(config.HeaderRequestID)
 		logApp := logger.LogrusLogger
 
 		defer func() {

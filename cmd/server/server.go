@@ -8,13 +8,13 @@ import (
 	"github.com/spf13/cobra"
 	"go-base/config"
 	_ "go-base/docs"
-	"go-base/internal/infra/asynq"
 	"go-base/internal/infra/cache"
 	"go-base/internal/infra/database"
 	"go-base/internal/infra/limiter"
 	"go-base/internal/infra/logger"
 	"go-base/internal/infra/redis"
 	"go-base/internal/infra/schedule"
+	"go-base/internal/infra/worker"
 	"go-base/internal/routes"
 	"net/http"
 	"os"
@@ -68,9 +68,9 @@ func start() {
 
 		isWorker, _ := strconv.ParseBool(fmt.Sprintf("%t", EnvConfig.IsWorker))
 		if isWorker {
-			asynq.InitServer()
+			worker.InitServer()
 		} else {
-			asynq.InitClient()
+			worker.InitClient()
 		}
 	}
 
