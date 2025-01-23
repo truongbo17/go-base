@@ -68,5 +68,5 @@ func SendMessage(chatID string, text string) {
 
 	var telegramResponse ResponseTelegram
 	_ = json.Unmarshal(body, &telegramResponse)
-	logApp.Infof("Telegram send message response: %+v", telegramResponse)
+	logApp.Infof("Telegram send message response: %+v", string(body))
 }
