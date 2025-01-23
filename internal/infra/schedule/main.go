@@ -23,6 +23,7 @@ func Init() {
 	}
 	logApp := logger.LogrusLogger
 
+	// Register job for schedule/cron at here.
 	_, err = s.NewJob(
 		gocron.DailyJob(1, gocron.NewAtTimes(gocron.NewAtTime(12, 0, 0))),
 		gocron.NewTask(func(time string) {
