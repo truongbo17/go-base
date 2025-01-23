@@ -100,7 +100,7 @@ Build
 * Upload file (local, s3)
 * Kafka (producer, consumer)
 * Authentication (JWT access token, refresh token) ✅
-* Google auth
+* Google auth ✅
 * Cache (local, redis) ✅
 * Redis ✅
 * GraphQL
