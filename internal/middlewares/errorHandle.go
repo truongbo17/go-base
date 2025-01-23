@@ -40,12 +40,6 @@ func ErrorHandle() gin.HandlerFunc {
 		}()
 		context.Next()
 
-		path := context.Request.URL.Path
-		if path == "/docs/swagger" || len(path) > 13 && path[:13] == "/docs/swagger" {
-			context.Next()
-			return
-		}
-
 		status := context.Writer.Status()
 		if status >= 400 {
 			context.JSON(status, &response.BaseResponse{
