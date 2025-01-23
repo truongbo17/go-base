@@ -62,6 +62,7 @@ func start() {
 		schedule.Init()
 
 		asynq.InitClient()
+		asynq.InitServer()
 	}
 
 	routes.Init(appEnv)
