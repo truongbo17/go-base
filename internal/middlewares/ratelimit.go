@@ -28,7 +28,7 @@ func RateLimitPublic() gin.HandlerFunc {
 func RateLoginPublic() gin.HandlerFunc {
 	rate := limiter.Rate{
 		Period: 1 * time.Hour,
-		Limit:  3,
+		Limit:  5,
 	}
 
 	return limiter2.Limit(rate)

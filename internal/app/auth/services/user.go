@@ -85,5 +85,8 @@ func (userService *UserService) GetUserByEmail(email string) (*model.User, error
 func (userService *UserService) GetUserById(id uint) (*model.User, error) {
 	user := &model.User{}
 	err := userService.UserRepository.FindByID(id, user)
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		return nil, nil
+	}
 	return user, err
 }

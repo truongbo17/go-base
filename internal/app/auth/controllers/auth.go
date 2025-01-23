@@ -41,7 +41,39 @@ func NewUserController() *UserController {
 // @Router       /auth/me [get]
 // @Security	 Authorization
 func (userController *UserController) Me(context *gin.Context) {
+	userId := context.MustGet("userId").(uint)
+	user, err := userController.UserService.GetUserById(userId)
+	res := &response.BaseResponse{
+		Status:    false,
+		RequestId: context.GetString("x-request-id"),
+		Data:      nil,
+		Message:   "",
+		Error:     nil,
+	}
+	if err != nil {
+		res.StatusCode = 1006
+		res.Message = err.Error()
+		context.JSON(http.StatusOK, res)
+		return
+	}
+	if user == nil {
+		res.StatusCode = 1007
+		res.Message = "User not found"
+		context.JSON(http.StatusOK, res)
+		return
+	}
 
+	userInfo := responseAuth.UserInfo{}
+	_ = copier.Copy(&userInfo, &user)
+
+	context.JSON(http.StatusOK, response.BaseResponse{
+		Status:     true,
+		StatusCode: http.StatusOK,
+		RequestId:  context.GetString("x-request-id"),
+		Data:       userInfo,
+		Message:    "Success.",
+		Error:      nil,
+	})
 }
 
 // Register godoc
@@ -205,6 +237,12 @@ func (userController *UserController) Refresh(context *gin.Context) {
 	if err != nil {
 		res.StatusCode = 1004
 		res.Message = err.Error()
+		context.JSON(http.StatusOK, res)
+		return
+	}
+	if user == nil {
+		res.StatusCode = 1005
+		res.Message = "User not found"
 		context.JSON(http.StatusOK, res)
 		return
 	}
