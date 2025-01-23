@@ -27,3 +27,7 @@ swagger:
 tidy:
 	go mod tidy
 
+.PHONY: download
+# install package
+download:
+	go mod download

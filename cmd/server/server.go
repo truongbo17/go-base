@@ -9,6 +9,7 @@ import (
 	_ "go-base/docs"
 	"go-base/internal/infra/cache"
 	"go-base/internal/infra/database"
+	"go-base/internal/infra/limiter"
 	"go-base/internal/infra/logger"
 	"go-base/internal/infra/redis"
 	"go-base/internal/routes"
@@ -48,6 +49,8 @@ func start() {
 
 	storeCache := EnvConfig.CacheConfig.CacheStore
 	cache.InitCache(storeCache)
+
+	limiter.InitLimiterStore(storeCache)
 
 	database.ConnectDatabase(&EnvConfig.DatabaseConnection)
 

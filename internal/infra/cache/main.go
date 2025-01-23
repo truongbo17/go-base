@@ -1,6 +1,7 @@
 package cache
 
 import (
+	"go-base/config"
 	"go-base/internal/infra/logger"
 	"go-base/internal/infra/redis"
 	"time"
@@ -15,7 +16,7 @@ type ICache interface {
 var Cache ICache
 
 func InitCache(storeCache string) {
-	if storeCache == "redis" {
+	if storeCache == config.CacheStoreRedis {
 		Cache = NewRedisCache(redis.ClientRedis)
 	} else {
 		Cache = NewLocalCache(5*time.Minute, 10*time.Minute)
